@@ -1,0 +1,43 @@
+/* Author: Derek O Reilly, Dundalk Institute of Technology, Ireland. */
+/* style class for game's container, canvas and loading message      */
+
+#gameContainer {
+  /* style the gameContainer if the game includes non-canvas elements */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#Character {
+}
+
+#gameCanvas {
+  /* the canvas styling usually does not change */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  outline: 1px solid darkgrey;
+  width: 95vw;
+
+  /* margin: auto; */
+  height: 50vh;
+  border: 1px solid yellow;
+}
+
+#loadingMessage {
+  /* the loading message styling usually does not change */
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  z-index: 100;
+  font-size: 50px;
+}
+
+@media (orientation: landscape) {
+  #gameCanvas {
+    height: 96vh;
+    width: 95vw;
+  }
+}
