@@ -21,6 +21,7 @@ class BombermanCharacter extends Character {
       centreX; /* set the start position of the Character in the maze */
     this.centreY = centreY;
 
-    this.Character_SPEED = 5; /* set the Character's speed */
+    this.Character_SPEED =
+      canvas.width / CHARACTER_SCALE / 10; /* set the Character's speed */
   }
 }

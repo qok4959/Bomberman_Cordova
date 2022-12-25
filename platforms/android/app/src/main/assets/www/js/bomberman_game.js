@@ -12,9 +12,6 @@ CharacterImage.src = "images/characters_sheet.png";
 let background = new Image();
 background.src = "images/blue_background.jpg";
 
-let mazeGrid = new Image();
-mazeGrid.src = "images/maze_grid.png";
-
 let tileObstacle = new Image();
 tileObstacle.src = "images/tile_obstacle.png";
 
@@ -27,12 +24,14 @@ const RIGHT = 2;
 const STOPPED = 4;
 
 /* The various gameObjects */
-let Character_WIDTH = 0;
+
 /* These are the positions that each gameObject is held in the gameObjects[] array */
 const BACKGROUND = 0;
 // const MAZE = 1;
 const CHARACTER = 1;
 const WIN_MESSAGE = 2;
+const CHARACTER_SCALE = 15;
+let Character_WIDTH;
 /******************* END OF Declare game specific data and functions *****************/
 
 /* Always have a playGame() function                                     */
@@ -65,12 +64,16 @@ function playGame() {
   //     canvas.height
   //   );
 
-  gameObjects[CHARACTER] = new BombermanCharacter(CharacterImage, 30, 30);
+  gameObjects[CHARACTER] = new BombermanCharacter(
+    CharacterImage,
+    canvas.width / 10,
+    canvas.width / 8
+  );
 
   /* END OF game specific code. */
 
   /* Always create a game that uses the gameObject array */
-  let game = new CharacterCanvas(mazeGrid);
+  let game = new CharacterCanvas();
 
   /* Always play the game */
   game.start();

@@ -4,28 +4,24 @@
 /* If the Character is guided to the maze exit, then a win message appears. */
 
 class CharacterCanvas extends CanvasGame {
-  constructor(mazeGridImage) {
+  constructor() {
     super();
 
     /* this.mazeCtx will be used for collision detection */
     this.offScreenCanvas = document.createElement("canvas");
-    this.offScreenCtx = this.offScreenCanvas.getContext("2d");
+    this.offScreenCtx = this.offScreenCanvas.getContext("2d", {
+      willReadFrequently: true,
+    });
     this.offScreenCanvas.width = canvas.width;
     this.offScreenCanvas.height = canvas.height;
-    // this.offScreenCtx.drawImage(
-    //   mazeGridImage,
-    //   0,
-    //   0,
-    //   canvas.width,
-    //   canvas.height
-    // );
+
     this.borderWidth = canvas.height / 50;
+
     this.generateBorder();
     this.generateObjectsOnCanvas();
   }
 
   collisionDetection() {
-    // console.log("posX " + gameObjects[CHARACTER].getCentreX());
     if (!this.offScreenCtx) {
       return;
     }
@@ -34,38 +30,32 @@ class CharacterCanvas extends CanvasGame {
       let imageData = this.offScreenCtx.getImageData(
         gameObjects[CHARACTER].getCentreX(),
         gameObjects[CHARACTER].getCentreY(),
-        20,
-        5
+        Character_WIDTH,
+        1
       );
-      if (imageData.data[3] !== 0) {
-        console.log(imageData);
-        gameObjects[CHARACTER].setDirection(DOWN);
 
-        // this.destroyAWall();
-      }
+      if (this.isTransparent(imageData))
+        gameObjects[CHARACTER].setDirection(DOWN);
     } else if (gameObjects[CHARACTER].getDirection() === LEFT) {
       let imageData = this.offScreenCtx.getImageData(
-        gameObjects[CHARACTER].getCentreX() + 3,
+        gameObjects[CHARACTER].getCentreX(),
         gameObjects[CHARACTER].getCentreY(),
         1,
         Character_WIDTH
       );
-      if (imageData.data[3] !== 0) {
-        gameObjects[CHARACTER].setDirection(RIGHT);
 
-        // this.destroyAWall();
-      }
+      if (this.isTransparent(imageData))
+        gameObjects[CHARACTER].setDirection(RIGHT);
     } else if (gameObjects[CHARACTER].getDirection() === DOWN) {
       let imageData = this.offScreenCtx.getImageData(
         gameObjects[CHARACTER].getCentreX(),
-        gameObjects[CHARACTER].getCentreY() + Character_WIDTH - 3,
+        gameObjects[CHARACTER].getCentreY() + Character_WIDTH,
         Character_WIDTH,
         1
       );
-      if (imageData.data[3] !== 0) {
+
+      if (this.isTransparent(imageData))
         gameObjects[CHARACTER].setDirection(UP);
-        // this.destroyAWall();
-      }
 
       if (gameObjects[CHARACTER].getCentreY() > canvas.height) {
         /* Player has won */
@@ -88,15 +78,14 @@ class CharacterCanvas extends CanvasGame {
       }
     } else if (gameObjects[CHARACTER].getDirection() === RIGHT) {
       let imageData = this.offScreenCtx.getImageData(
-        gameObjects[CHARACTER].getCentreX() + Character_WIDTH - 3,
+        gameObjects[CHARACTER].getCentreX() + Character_WIDTH,
         gameObjects[CHARACTER].getCentreY(),
         1,
         Character_WIDTH
       );
-      if (imageData.data[3] !== 0) {
+
+      if (this.isTransparent(imageData))
         gameObjects[CHARACTER].setDirection(LEFT);
-        // this.destroyAWall();
-      }
     }
   }
 
@@ -109,13 +98,12 @@ class CharacterCanvas extends CanvasGame {
   };
 
   generateObjectsOnCanvas = () => {
-    const division = 15;
-    const widthIncrement = canvas.height / division;
-    const heightIncrement = canvas.height / division;
+    const widthIncrement = canvas.height / (CHARACTER_SCALE - 1);
+    const heightIncrement = canvas.height / (CHARACTER_SCALE - 1);
 
     for (
       let i = this.borderWidth;
-      i < canvas.width - widthIncrement;
+      i < canvas.width - widthIncrement * 2;
       i += widthIncrement
     ) {
       for (
@@ -123,7 +111,7 @@ class CharacterCanvas extends CanvasGame {
         j < canvas.height - widthIncrement;
         j += heightIncrement
       ) {
-        console.log(Math.random() * 10.0);
+        // console.log(Math.random() * 10.0);
         if (Math.random() * 10 > 9)
           this.offScreenCtx.drawImage(
             tileObstacle,
@@ -134,6 +122,14 @@ class CharacterCanvas extends CanvasGame {
           );
       }
     }
+  };
+
+  isTransparent = (arr) => {
+    for (let i = 3; i < arr.data.length - 4; i += 4) {
+      if (arr.data[i] === 255) return true;
+    }
+
+    return false;
   };
 
   destroyAWall = () => {

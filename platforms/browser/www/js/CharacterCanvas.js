@@ -15,7 +15,7 @@ class CharacterCanvas extends CanvasGame {
     this.offScreenCanvas.width = canvas.width;
     this.offScreenCanvas.height = canvas.height;
 
-    this.borderWidth = canvas.height / 50;
+    this.borderWidth = canvas.height / (CHARACTER_SCALE / 2);
 
     this.generateBorder();
     this.generateObjectsOnCanvas();
@@ -90,25 +90,76 @@ class CharacterCanvas extends CanvasGame {
   }
 
   generateBorder = () => {
-    this.offScreenCtx.beginPath();
-    this.offScreenCtx.lineWidth = this.borderWidth;
-    this.offScreenCtx.strokeStyle = "cyan";
-    this.offScreenCtx.rect(0, 0, canvas.width, canvas.height);
-    this.offScreenCtx.stroke();
+    // this.offScreenCtx.beginPath();
+    // this.offScreenCtx.lineWidth = this.borderWidth;
+    // this.offScreenCtx.strokeStyle = "cyan";
+    // this.offScreenCtx.rect(0, 0, canvas.width, canvas.height);
+    // this.offScreenCtx.stroke();
+
+    const widthIncrement = canvas.width / (CHARACTER_SCALE - 2);
+    const heightIncrement = canvas.height / (CHARACTER_SCALE - 2);
+
+    for (let i = 0; i < canvas.width; i += heightIncrement) {
+      console.log("i:" + i + " " + (canvas.width - heightIncrement));
+      for (let j = 0; j < canvas.height; j += heightIncrement) {
+        if (j == 0) {
+          //|| j >= canvas.height - heightIncrement) {
+          this.offScreenCtx.drawImage(
+            tileObstacle,
+            i,
+            j,
+            heightIncrement,
+            heightIncrement
+          );
+          continue;
+        }
+
+        if (i == 0) {
+          this.offScreenCtx.drawImage(
+            tileObstacle,
+            i,
+            j,
+            heightIncrement,
+            heightIncrement
+          );
+          continue;
+        }
+
+        if (j >= canvas.height - heightIncrement) {
+          this.offScreenCtx.drawImage(
+            tileObstacle,
+            i,
+            canvas.height - heightIncrement,
+            heightIncrement,
+            heightIncrement
+          );
+        }
+
+        if (i >= canvas.width - heightIncrement) {
+          this.offScreenCtx.drawImage(
+            tileObstacle,
+            canvas.width - heightIncrement,
+            j,
+            heightIncrement,
+            heightIncrement
+          );
+        }
+      }
+    }
   };
 
   generateObjectsOnCanvas = () => {
-    const widthIncrement = canvas.height / (CHARACTER_SCALE - 1);
-    const heightIncrement = canvas.height / (CHARACTER_SCALE - 1);
+    const widthIncrement = canvas.height / (CHARACTER_SCALE - 2);
+    const heightIncrement = canvas.height / (CHARACTER_SCALE - 2);
 
     for (
       let i = this.borderWidth;
-      i < canvas.width - widthIncrement * 2;
+      i < canvas.width - this.borderWidth;
       i += widthIncrement
     ) {
       for (
         let j = this.borderWidth;
-        j < canvas.height - widthIncrement;
+        j < canvas.height - this.borderWidth * 2;
         j += heightIncrement
       ) {
         // console.log(Math.random() * 10.0);
@@ -123,6 +174,8 @@ class CharacterCanvas extends CanvasGame {
       }
     }
   };
+
+  placeABomb = () => {};
 
   isTransparent = (arr) => {
     for (let i = 3; i < arr.data.length - 4; i += 4) {
