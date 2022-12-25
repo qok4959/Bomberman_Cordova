@@ -19,7 +19,8 @@ class BombermanCharacterCanvasGame extends CanvasGame {
     //   canvas.width,
     //   canvas.height
     // );
-
+    this.borderWidth = canvas.height / 50;
+    this.generateBorder();
     this.generateObjectsOnCanvas();
   }
 
@@ -40,7 +41,7 @@ class BombermanCharacterCanvasGame extends CanvasGame {
         console.log(imageData);
         gameObjects[CHARACTER].setDirection(DOWN);
 
-        this.destroyAWall();
+        // this.destroyAWall();
       }
     } else if (gameObjects[CHARACTER].getDirection() === LEFT) {
       let imageData = this.offScreenCtx.getImageData(
@@ -99,15 +100,31 @@ class BombermanCharacterCanvasGame extends CanvasGame {
     }
   }
 
+  generateBorder = () => {
+    this.offScreenCtx.beginPath();
+    this.offScreenCtx.lineWidth = this.borderWidth;
+    this.offScreenCtx.strokeStyle = "cyan";
+    this.offScreenCtx.rect(0, 0, canvas.width, canvas.height);
+    this.offScreenCtx.stroke();
+  };
+
   generateObjectsOnCanvas = () => {
     const division = 15;
-    const widthIncrement = canvas.width / division;
+    const widthIncrement = canvas.height / division;
     const heightIncrement = canvas.height / division;
 
-    for (let i = 0; i < canvas.width; i += widthIncrement) {
-      for (let j = 0; j < canvas.height; j += heightIncrement) {
+    for (
+      let i = this.borderWidth;
+      i < canvas.width - widthIncrement;
+      i += widthIncrement
+    ) {
+      for (
+        let j = this.borderWidth;
+        j < canvas.height - widthIncrement;
+        j += heightIncrement
+      ) {
         console.log(Math.random() * 10.0);
-        if (Math.random() * 10 > 9.8)
+        if (Math.random() * 10 > 9)
           this.offScreenCtx.drawImage(
             tileObstacle,
             i,

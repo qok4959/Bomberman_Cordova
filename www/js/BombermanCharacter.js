@@ -9,8 +9,8 @@ class BombermanCharacter extends Character {
       CharacterImage,
       25,
       25,
-      25,
-      25
+      canvas.height / CHARACTER_SCALE,
+      canvas.height / CHARACTER_SCALE
     ); /* as this class extends from GameObject, you must always call super() */
 
     /* These variables depend on the object */
@@ -21,6 +21,6 @@ class BombermanCharacter extends Character {
       centreX; /* set the start position of the Character in the maze */
     this.centreY = centreY;
 
-    this.Character_SPEED = 1; /* set the Character's speed */
+    this.Character_SPEED = 5; /* set the Character's speed */
   }
 }

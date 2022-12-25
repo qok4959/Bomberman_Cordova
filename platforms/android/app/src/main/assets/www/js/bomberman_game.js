@@ -7,7 +7,7 @@
 /* images must be declared as global, so that they will load before the game starts  */
 
 let CharacterImage = new Image();
-CharacterImage.src = "images/Characters_sheet.png";
+CharacterImage.src = "images/characters_sheet.png";
 
 let background = new Image();
 background.src = "images/blue_background.jpg";
@@ -31,7 +31,7 @@ let Character_WIDTH = 0;
 /* These are the positions that each gameObject is held in the gameObjects[] array */
 const BACKGROUND = 0;
 // const MAZE = 1;
-const Character = 1;
+const CHARACTER = 1;
 const WIN_MESSAGE = 2;
 /******************* END OF Declare game specific data and functions *****************/
 

@@ -12,20 +12,14 @@ class BombermanCharacterCanvasGame extends CanvasGame {
     this.offScreenCtx = this.offScreenCanvas.getContext("2d");
     this.offScreenCanvas.width = canvas.width;
     this.offScreenCanvas.height = canvas.height;
-    // this.offScreenCtx.drawImage(
-    //   mazeGridImage,
-    //   0,
-    //   0,
-    //   canvas.width,
-    //   canvas.height
-    // );
+
     this.borderWidth = canvas.height / 50;
+
     this.generateBorder();
     this.generateObjectsOnCanvas();
   }
 
   collisionDetection() {
-    // console.log("posX " + gameObjects[CHARACTER].getCentreX());
     if (!this.offScreenCtx) {
       return;
     }
@@ -34,8 +28,8 @@ class BombermanCharacterCanvasGame extends CanvasGame {
       let imageData = this.offScreenCtx.getImageData(
         gameObjects[CHARACTER].getCentreX(),
         gameObjects[CHARACTER].getCentreY(),
-        20,
-        5
+        1,
+        1
       );
       if (imageData.data[3] !== 0) {
         console.log(imageData);
@@ -45,10 +39,10 @@ class BombermanCharacterCanvasGame extends CanvasGame {
       }
     } else if (gameObjects[CHARACTER].getDirection() === LEFT) {
       let imageData = this.offScreenCtx.getImageData(
-        gameObjects[CHARACTER].getCentreX() + 3,
+        gameObjects[CHARACTER].getCentreX(),
         gameObjects[CHARACTER].getCentreY(),
         1,
-        Character_WIDTH
+        1
       );
       if (imageData.data[3] !== 0) {
         gameObjects[CHARACTER].setDirection(RIGHT);
@@ -58,9 +52,9 @@ class BombermanCharacterCanvasGame extends CanvasGame {
     } else if (gameObjects[CHARACTER].getDirection() === DOWN) {
       let imageData = this.offScreenCtx.getImageData(
         gameObjects[CHARACTER].getCentreX(),
-        gameObjects[CHARACTER].getCentreY() + Character_WIDTH - 3,
-        Character_WIDTH,
-        1
+        gameObjects[CHARACTER].getCentreY() + Character_WIDTH,
+       100,
+        100
       );
       if (imageData.data[3] !== 0) {
         gameObjects[CHARACTER].setDirection(UP);
@@ -88,10 +82,10 @@ class BombermanCharacterCanvasGame extends CanvasGame {
       }
     } else if (gameObjects[CHARACTER].getDirection() === RIGHT) {
       let imageData = this.offScreenCtx.getImageData(
-        gameObjects[CHARACTER].getCentreX() + Character_WIDTH - 3,
+        gameObjects[CHARACTER].getCentreX() + Character_WIDTH,
         gameObjects[CHARACTER].getCentreY(),
         1,
-        Character_WIDTH
+        1
       );
       if (imageData.data[3] !== 0) {
         gameObjects[CHARACTER].setDirection(LEFT);
@@ -109,13 +103,13 @@ class BombermanCharacterCanvasGame extends CanvasGame {
   };
 
   generateObjectsOnCanvas = () => {
-    const division = 15;
+    const division = CHARACTER_SCALE;
     const widthIncrement = canvas.height / division;
     const heightIncrement = canvas.height / division;
 
     for (
       let i = this.borderWidth;
-      i < canvas.width - widthIncrement;
+      i < canvas.width - widthIncrement * 2;
       i += widthIncrement
     ) {
       for (

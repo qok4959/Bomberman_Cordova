@@ -18,12 +18,13 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  outline: 1px solid darkgrey;
+  /* outline: 1px solid darkgrey; */
   width: 95vw;
 
   /* margin: auto; */
   height: 50vh;
-  border: 1px solid yellow;
+  border: 3px solid black;
+  border-radius: 10px;
 }
 
 #loadingMessage {

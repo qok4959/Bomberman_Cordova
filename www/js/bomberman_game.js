@@ -33,6 +33,7 @@ const BACKGROUND = 0;
 // const MAZE = 1;
 const CHARACTER = 1;
 const WIN_MESSAGE = 2;
+const CHARACTER_SCALE = 15;
 /******************* END OF Declare game specific data and functions *****************/
 
 /* Always have a playGame() function                                     */
