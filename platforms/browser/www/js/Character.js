@@ -29,7 +29,7 @@ class Character extends GameObject {
     this.CharacterImage = CharacterImage;
 
     //global variable
-    Character_WIDTH = CharacterWidth;
+    Character_WIDTH = canvas.height / CHARACTER_SCALE;
 
     this.SPRITE_WIDTH =
       this.CharacterImage.width / this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE / 5;

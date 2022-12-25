@@ -70,7 +70,7 @@ function playGame() {
   /* END OF game specific code. */
 
   /* Always create a game that uses the gameObject array */
-  let game = new BombermanCharacterCanvasGame(mazeGrid);
+  let game = new CharacterCanvas(mazeGrid);
 
   /* Always play the game */
   game.start();
