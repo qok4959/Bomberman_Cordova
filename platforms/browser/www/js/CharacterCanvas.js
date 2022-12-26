@@ -9,13 +9,14 @@ class CharacterCanvas extends CanvasGame {
 
     /* this.mazeCtx will be used for collision detection */
     this.offScreenCanvas = document.createElement("canvas");
-    this.offScreenCtx = this.offScreenCanvas.getContext("2d", {
+    offCtx = this.offScreenCtx = this.offScreenCanvas.getContext("2d", {
       willReadFrequently: true,
     });
     this.offScreenCanvas.width = canvas.width;
     this.offScreenCanvas.height = canvas.height;
 
     this.borderWidth = canvas.height / (CHARACTER_SCALE / 2);
+    this.tileSize = canvas.height / (CHARACTER_SCALE - 2);
 
     this.generateBorder();
     this.generateObjectsOnCanvas();
@@ -90,26 +91,15 @@ class CharacterCanvas extends CanvasGame {
   }
 
   generateBorder = () => {
-    // this.offScreenCtx.beginPath();
-    // this.offScreenCtx.lineWidth = this.borderWidth;
-    // this.offScreenCtx.strokeStyle = "cyan";
-    // this.offScreenCtx.rect(0, 0, canvas.width, canvas.height);
-    // this.offScreenCtx.stroke();
-
-    const widthIncrement = canvas.width / (CHARACTER_SCALE - 2);
-    const heightIncrement = canvas.height / (CHARACTER_SCALE - 2);
-
-    for (let i = 0; i < canvas.width; i += heightIncrement) {
-      console.log("i:" + i + " " + (canvas.width - heightIncrement));
-      for (let j = 0; j < canvas.height; j += heightIncrement) {
+    for (let i = 0; i < canvas.width; i += this.tileSize) {
+      for (let j = 0; j < canvas.height; j += this.tileSize) {
         if (j == 0) {
-          //|| j >= canvas.height - heightIncrement) {
           this.offScreenCtx.drawImage(
             tileObstacle,
             i,
             j,
-            heightIncrement,
-            heightIncrement
+            this.tileSize,
+            this.tileSize
           );
           continue;
         }
@@ -119,29 +109,29 @@ class CharacterCanvas extends CanvasGame {
             tileObstacle,
             i,
             j,
-            heightIncrement,
-            heightIncrement
+            this.tileSize,
+            this.tileSize
           );
           continue;
         }
 
-        if (j >= canvas.height - heightIncrement) {
+        if (j >= canvas.height - this.tileSize) {
           this.offScreenCtx.drawImage(
             tileObstacle,
             i,
-            canvas.height - heightIncrement,
-            heightIncrement,
-            heightIncrement
+            canvas.height - this.tileSize,
+            this.tileSize,
+            this.tileSize
           );
         }
 
-        if (i >= canvas.width - heightIncrement) {
+        if (i >= canvas.width - this.tileSize) {
           this.offScreenCtx.drawImage(
             tileObstacle,
-            canvas.width - heightIncrement,
+            canvas.width - this.tileSize,
             j,
-            heightIncrement,
-            heightIncrement
+            this.tileSize,
+            this.tileSize
           );
         }
       }
@@ -149,33 +139,146 @@ class CharacterCanvas extends CanvasGame {
   };
 
   generateObjectsOnCanvas = () => {
-    const widthIncrement = canvas.height / (CHARACTER_SCALE - 2);
-    const heightIncrement = canvas.height / (CHARACTER_SCALE - 2);
-
     for (
       let i = this.borderWidth;
       i < canvas.width - this.borderWidth;
-      i += widthIncrement
+      i += this.tileSize
     ) {
       for (
         let j = this.borderWidth;
-        j < canvas.height - this.borderWidth * 2;
-        j += heightIncrement
+        j < canvas.height - this.borderWidth;
+        j += this.tileSize
       ) {
-        // console.log(Math.random() * 10.0);
         if (Math.random() * 10 > 9)
           this.offScreenCtx.drawImage(
             tileObstacle,
             i,
             j,
-            widthIncrement,
-            heightIncrement
+            this.tileSize,
+            this.tileSize
           );
       }
     }
   };
 
-  placeABomb = () => {};
+  placeABomb = () => {
+    console.log("bomb has been placed");
+
+    let posBombX = gameObjects[CHARACTER].getCentreX();
+    let posBombY = gameObjects[CHARACTER].getCentreY();
+
+    // this.offScreenCtx.drawImage(
+    //   tileBomb,
+    //   posBombX,
+    //   posBombY,
+    //   this.tileSize,
+    //   this.tileSize
+    // );
+    setTimeout(() => {
+      this.detonateABomb(posBombX, posBombY);
+    }, 3000);
+    gameObjects[CHARACTER].setBomb(false);
+  };
+
+  detonateABomb = (posX, posY) => {
+    // for (let i = 0; i < 3; i++) {
+    //   this.offScreenCtx.drawImage(
+    //     explosionBase,
+    //     posX + i * this.tileSize,
+    //     posY,
+    //     this.tileSize,
+    //     this.tileSize
+    //   );
+
+    //   this.offScreenCtx.drawImage(
+    //     explosionBase,
+    //     posX,
+    //     posY + i * this.tileSize,
+    //     this.tileSize,
+    //     this.tileSize
+    //   );
+
+    //   this.offScreenCtx.drawImage(
+    //     explosionBase,
+    //     posX - i * this.tileSize,
+    //     posY,
+    //     this.tileSize,
+    //     this.tileSize
+    //   );
+
+    //   this.offScreenCtx.drawImage(
+    //     explosionBase,
+    //     posX,
+    //     posY - i * this.tileSize,
+    //     this.tileSize,
+    //     this.tileSize
+    //   );
+    // }
+    for (let i = 0; i < 3; i++) {
+      gameObjects[gameObjects.length] = new Explosion(
+        explosionImage,
+        posX,
+        posY + i * this.tileSize,
+        this.tileSize
+      );
+      gameObjects[gameObjects.length - 1].start();
+      this.removeObject();
+
+      gameObjects[gameObjects.length] = new Explosion(
+        explosionImage,
+        posX + i * this.tileSize,
+        posY,
+        this.tileSize
+      );
+      gameObjects[gameObjects.length - 1].start();
+      this.removeObject();
+      gameObjects[gameObjects.length] = new Explosion(
+        explosionImage,
+        posX - i * this.tileSize,
+        posY,
+        this.tileSize
+      );
+      gameObjects[gameObjects.length - 1].start();
+      this.removeObject();
+
+      gameObjects[gameObjects.length] = new Explosion(
+        explosionImage,
+        posX,
+        posY - i * this.tileSize,
+        this.tileSize
+      );
+      gameObjects[gameObjects.length - 1].start();
+      this.removeObject();
+    }
+
+    // gameObjects[5] = new Explosion(explosionImage, posX, posY, this.tileSize);
+    // gameObjects[5].start();
+
+    // gameObjects.pop();
+    // console.log(gameObjects.length);
+    // gameObjects[gameObjects.length] = new Explosion(
+    //   explosionImage,
+    //   posX,
+    //   posY,
+    //   this.tileSize
+    // );
+    // console.log(gameObjects.length);
+    // gameObjects[gameObjects.length - 1].start();
+    // console.log(gameObjects.length);
+    // gameObjects.pop();
+    // console.log(gameObjects.length);
+
+    // gameObjects[5].start();
+
+    console.log("detonating " + posX + " " + posY);
+  };
+
+  removeObject = () => {
+    setTimeout(() => {
+      gameObjects.pop();
+      console.log("popping");
+    }, 3000);
+  };
 
   isTransparent = (arr) => {
     for (let i = 3; i < arr.data.length - 4; i += 4) {
@@ -203,8 +306,16 @@ class CharacterCanvas extends CanvasGame {
     );
   };
 
+  playGameLoop() {
+    if (gameObjects[CHARACTER].getPlacingBomb()) {
+      this.placeABomb();
+    }
+    super.playGameLoop();
+  }
+
   render() {
     super.render();
+
     if (this.offScreenCanvas) ctx.drawImage(this.offScreenCanvas, 0, 0);
   }
 }
