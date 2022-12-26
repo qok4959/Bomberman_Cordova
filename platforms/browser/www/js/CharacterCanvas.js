@@ -9,17 +9,29 @@ class CharacterCanvas extends CanvasGame {
 
     /* this.mazeCtx will be used for collision detection */
     this.offScreenCanvas = document.createElement("canvas");
-    offCtx = this.offScreenCtx = this.offScreenCanvas.getContext("2d", {
+    this.offScreenCtx = this.offScreenCanvas.getContext("2d", {
       willReadFrequently: true,
     });
+
+    offCtx = this.offScreenCtx;
+
     this.offScreenCanvas.width = canvas.width;
     this.offScreenCanvas.height = canvas.height;
 
     this.borderWidth = canvas.height / (CHARACTER_SCALE / 2);
     this.tileSize = canvas.height / (CHARACTER_SCALE - 2);
 
+    this.arrOfObjects = [];
     this.generateBorder();
     this.generateObjectsOnCanvas();
+
+    this.canvasBack = document.createElement("canvas");
+    this.canvasBack.width = canvas.width;
+    this.canvasBack.height = canvas.height;
+    this.canvasBack.ctx = this.canvasBack.getContext("2d");
+    this.canvasBack.ctx.drawImage(this.offScreenCanvas, 0, 0);
+
+    //canvas offscreen backup
   }
 
   collisionDetection() {
@@ -94,6 +106,7 @@ class CharacterCanvas extends CanvasGame {
     for (let i = 0; i < canvas.width; i += this.tileSize) {
       for (let j = 0; j < canvas.height; j += this.tileSize) {
         if (j == 0) {
+          this.arrOfObjects.push({ x: i, y: j });
           this.offScreenCtx.drawImage(
             tileObstacle,
             i,
@@ -105,6 +118,7 @@ class CharacterCanvas extends CanvasGame {
         }
 
         if (i == 0) {
+          this.arrOfObjects.push({ x: i, y: j });
           this.offScreenCtx.drawImage(
             tileObstacle,
             i,
@@ -116,6 +130,7 @@ class CharacterCanvas extends CanvasGame {
         }
 
         if (j >= canvas.height - this.tileSize) {
+          this.arrOfObjects.push({ x: i, y: j });
           this.offScreenCtx.drawImage(
             tileObstacle,
             i,
@@ -126,6 +141,7 @@ class CharacterCanvas extends CanvasGame {
         }
 
         if (i >= canvas.width - this.tileSize) {
+          this.arrOfObjects.push({ x: i, y: j });
           this.offScreenCtx.drawImage(
             tileObstacle,
             canvas.width - this.tileSize,
@@ -149,7 +165,7 @@ class CharacterCanvas extends CanvasGame {
         j < canvas.height - this.borderWidth;
         j += this.tileSize
       ) {
-        if (Math.random() * 10 > 9)
+        if (Math.random() * 10 > 9) {
           this.offScreenCtx.drawImage(
             tileObstacle,
             i,
@@ -157,64 +173,36 @@ class CharacterCanvas extends CanvasGame {
             this.tileSize,
             this.tileSize
           );
+          this.arrOfObjects.push({ x: i, y: j });
+        }
       }
     }
   };
 
   placeABomb = () => {
     console.log("bomb has been placed");
-
+    console.log(this.arrOfObjects);
     let posBombX = gameObjects[CHARACTER].getCentreX();
     let posBombY = gameObjects[CHARACTER].getCentreY();
 
-    // this.offScreenCtx.drawImage(
-    //   tileBomb,
-    //   posBombX,
-    //   posBombY,
-    //   this.tileSize,
-    //   this.tileSize
-    // );
+    this.offScreenCtx.drawImage(
+      tileBomb,
+      posBombX,
+      posBombY,
+      this.tileSize,
+      this.tileSize
+    );
     setTimeout(() => {
       this.detonateABomb(posBombX, posBombY);
-    }, 3000);
+    }, 1000);
     gameObjects[CHARACTER].setBomb(false);
   };
 
   detonateABomb = (posX, posY) => {
-    // for (let i = 0; i < 3; i++) {
-    //   this.offScreenCtx.drawImage(
-    //     explosionBase,
-    //     posX + i * this.tileSize,
-    //     posY,
-    //     this.tileSize,
-    //     this.tileSize
-    //   );
-
-    //   this.offScreenCtx.drawImage(
-    //     explosionBase,
-    //     posX,
-    //     posY + i * this.tileSize,
-    //     this.tileSize,
-    //     this.tileSize
-    //   );
-
-    //   this.offScreenCtx.drawImage(
-    //     explosionBase,
-    //     posX - i * this.tileSize,
-    //     posY,
-    //     this.tileSize,
-    //     this.tileSize
-    //   );
-
-    //   this.offScreenCtx.drawImage(
-    //     explosionBase,
-    //     posX,
-    //     posY - i * this.tileSize,
-    //     this.tileSize,
-    //     this.tileSize
-    //   );
-    // }
     for (let i = 0; i < 3; i++) {
+      //top
+
+      console.log(this.isWallNearby(posX, posY + i * this.tileSize));
       gameObjects[gameObjects.length] = new Explosion(
         explosionImage,
         posX,
@@ -222,8 +210,8 @@ class CharacterCanvas extends CanvasGame {
         this.tileSize
       );
       gameObjects[gameObjects.length - 1].start();
-      this.removeObject();
 
+      //right radius
       gameObjects[gameObjects.length] = new Explosion(
         explosionImage,
         posX + i * this.tileSize,
@@ -231,7 +219,8 @@ class CharacterCanvas extends CanvasGame {
         this.tileSize
       );
       gameObjects[gameObjects.length - 1].start();
-      this.removeObject();
+
+      //left radius
       gameObjects[gameObjects.length] = new Explosion(
         explosionImage,
         posX - i * this.tileSize,
@@ -239,8 +228,8 @@ class CharacterCanvas extends CanvasGame {
         this.tileSize
       );
       gameObjects[gameObjects.length - 1].start();
-      this.removeObject();
 
+      //bottom radius
       gameObjects[gameObjects.length] = new Explosion(
         explosionImage,
         posX,
@@ -248,36 +237,20 @@ class CharacterCanvas extends CanvasGame {
         this.tileSize
       );
       gameObjects[gameObjects.length - 1].start();
-      this.removeObject();
+
+      //recurrency
+      this.resetOffsetCtx(20);
     }
-
-    // gameObjects[5] = new Explosion(explosionImage, posX, posY, this.tileSize);
-    // gameObjects[5].start();
-
-    // gameObjects.pop();
-    // console.log(gameObjects.length);
-    // gameObjects[gameObjects.length] = new Explosion(
-    //   explosionImage,
-    //   posX,
-    //   posY,
-    //   this.tileSize
-    // );
-    // console.log(gameObjects.length);
-    // gameObjects[gameObjects.length - 1].start();
-    // console.log(gameObjects.length);
-    // gameObjects.pop();
-    // console.log(gameObjects.length);
-
-    // gameObjects[5].start();
 
     console.log("detonating " + posX + " " + posY);
   };
 
-  removeObject = () => {
+  resetOffsetCtx = (x) => {
     setTimeout(() => {
-      gameObjects.pop();
-      console.log("popping");
-    }, 3000);
+      offCtx.reset();
+      offCtx.drawImage(this.canvasBack, 0, 0);
+      if (x > 0) this.resetOffsetCtx(x - 1);
+    }, 40);
   };
 
   isTransparent = (arr) => {
@@ -288,22 +261,32 @@ class CharacterCanvas extends CanvasGame {
     return false;
   };
 
-  destroyAWall = () => {
-    let imageData = this.offScreenCtx.getImageData(
-      gameObjects[CHARACTER].getCentreX(),
-      gameObjects[CHARACTER].getCentreY(),
-      Character_WIDTH,
-      3
-    );
-    for (let i = 0; i < imageData.data.length; i++) {
-      imageData.data[i + 3] = 0;
-    }
+  isWallNearby = (posX, posY) => {
+    this.arrOfObjects.forEach((el) => {
+      if (
+        (posX >= el.x &&
+          posX <= el.x + this.tileSize &&
+          posY >= el.y &&
+          posY <= el.y + this.tileSize) ||
+        (posX + this.tileSize >= el.x &&
+          posX + this.tileSize <= el.x + this.tileSize &&
+          posY >= el.y &&
+          posY <= el.y + this.tileSize) ||
+        (posX + this.tileSize >= el.x &&
+          posX + this.tileSize <= el.x + this.tileSize &&
+          posY + this.tileSize >= el.y &&
+          posY + this.tileSize <= el.y + this.tileSize) ||
+        (posX >= el.x &&
+          posX <= el.x + this.tileSize &&
+          posY + this.tileSize >= el.y &&
+          posY + this.tileSize <= el.y + this.tileSize)
+      ) {
+        console.log("jak niby");
+        return true;
+      }
+    });
 
-    this.offScreenCtx.putImageData(
-      imageData,
-      gameObjects[CHARACTER].getCentreX(),
-      gameObjects[CHARACTER].getCentreY()
-    );
+    return false;
   };
 
   playGameLoop() {

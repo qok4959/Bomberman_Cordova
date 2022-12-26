@@ -85,7 +85,6 @@ class Character extends GameObject {
       this.SPRITE_HEIGHT,
       this.centreX,
       this.centreY,
-      // this.centreY - this.SPRITE_HEIGHT / 2,
       this.WIDTH_OF_Character_ON_CANVAS,
       this.HEIGHT_OF_Character_ON_CANVAS
     );

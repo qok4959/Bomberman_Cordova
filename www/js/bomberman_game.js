@@ -44,6 +44,8 @@ const BACKGROUND = 0;
 const CHARACTER = 1;
 const WIN_MESSAGE = 2;
 const CHARACTER_SCALE = 15;
+let characterLifes=3;
+let botLifes = 1;
 let Character_WIDTH;
 /******************* END OF Declare game specific data and functions *****************/
 

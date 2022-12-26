@@ -35,9 +35,8 @@ class Explosion extends GameObject {
   }
 
   updateState() {
-    if (this.currentgameObject === this.NUMBER_OF_SPRITES) {
-      this.stopAndHide();
-    }
+
+
     this.currentgameObject++;
 
     this.column++;
@@ -48,14 +47,15 @@ class Explosion extends GameObject {
   }
 
   render() {
-    ctx.drawImage(
+
+    offCtx.drawImage(
       this.explosionImage,
       this.column * this.SPRITE_WIDTH,
       this.row * this.SPRITE_WIDTH,
       this.SPRITE_WIDTH,
       this.SPRITE_HEIGHT,
-      this.centreX - parseInt(this.size / 2),
-      this.centreY - parseInt(this.size / 2),
+      this.centreX,
+      this.centreY,
       this.size,
       this.size
     );
