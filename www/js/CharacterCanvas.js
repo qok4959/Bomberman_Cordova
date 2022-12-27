@@ -181,7 +181,6 @@ class CharacterCanvas extends CanvasGame {
 
   placeABomb = () => {
     console.log("bomb has been placed");
-    console.log(this.arrOfObjects);
     let posBombX = gameObjects[CHARACTER].getCentreX();
     let posBombY = gameObjects[CHARACTER].getCentreY();
 
@@ -199,44 +198,82 @@ class CharacterCanvas extends CanvasGame {
   };
 
   detonateABomb = (posX, posY) => {
+    let isTopColided = false,
+      isLeftColided = false,
+      isRightColided = false,
+      isBottomColided = false;
     for (let i = 0; i < 3; i++) {
-      //top
+      if (i == 0) {
+        gameObjects[gameObjects.length] = new Explosion(
+          explosionImage,
+          posX,
+          posY,
+          this.tileSize
+        );
+        gameObjects[gameObjects.length - 1].start();
+        continue;
+      }
 
-      console.log(this.isWallNearby(posX, posY + i * this.tileSize));
-      gameObjects[gameObjects.length] = new Explosion(
-        explosionImage,
-        posX,
-        posY + i * this.tileSize,
-        this.tileSize
-      );
-      gameObjects[gameObjects.length - 1].start();
+      //top
+      if (!this.isWallNearby(posX, posY + i * this.tileSize) && !isTopColided) {
+        gameObjects[gameObjects.length] = new Explosion(
+          explosionImage,
+          posX,
+          posY + i * this.tileSize,
+          this.tileSize
+        );
+        gameObjects[gameObjects.length - 1].start();
+      } else {
+        isTopColided = true;
+      }
 
       //right radius
-      gameObjects[gameObjects.length] = new Explosion(
-        explosionImage,
-        posX + i * this.tileSize,
-        posY,
-        this.tileSize
-      );
-      gameObjects[gameObjects.length - 1].start();
+      if (
+        !this.isWallNearby(posX + i * this.tileSize, posY) &&
+        !isRightColided
+      ) {
+        gameObjects[gameObjects.length] = new Explosion(
+          explosionImage,
+          posX + i * this.tileSize,
+          posY,
+          this.tileSize
+        );
+        gameObjects[gameObjects.length - 1].start();
+      } else {
+        isRightColided = true;
+      }
 
       //left radius
-      gameObjects[gameObjects.length] = new Explosion(
-        explosionImage,
-        posX - i * this.tileSize,
-        posY,
-        this.tileSize
-      );
-      gameObjects[gameObjects.length - 1].start();
+      if (
+        !this.isWallNearby(posX - i * this.tileSize, posY) &&
+        !isLeftColided
+      ) {
+        gameObjects[gameObjects.length] = new Explosion(
+          explosionImage,
+          posX - i * this.tileSize,
+          posY,
+          this.tileSize
+        );
+        gameObjects[gameObjects.length - 1].start();
+      } else {
+        isLeftColided = true;
+      }
 
       //bottom radius
-      gameObjects[gameObjects.length] = new Explosion(
-        explosionImage,
-        posX,
-        posY - i * this.tileSize,
-        this.tileSize
-      );
-      gameObjects[gameObjects.length - 1].start();
+      if (
+        !this.isWallNearby(posX, posY - i * this.tileSize) &&
+        !isBottomColided
+      ) {
+        gameObjects[gameObjects.length] = new Explosion(
+          explosionImage,
+          posX,
+          posY - i * this.tileSize,
+          this.tileSize
+        );
+        gameObjects[gameObjects.length - 1].start();
+      } else {
+        isBottomColided = true;
+      }
 
       //recurrency
       this.resetOffsetCtx(20);
@@ -262,7 +299,7 @@ class CharacterCanvas extends CanvasGame {
   };
 
   isWallNearby = (posX, posY) => {
-    this.arrOfObjects.forEach((el) => {
+    for (let el of this.arrOfObjects) {
       if (
         (posX >= el.x &&
           posX <= el.x + this.tileSize &&
@@ -276,16 +313,14 @@ class CharacterCanvas extends CanvasGame {
           posX + this.tileSize <= el.x + this.tileSize &&
           posY + this.tileSize >= el.y &&
           posY + this.tileSize <= el.y + this.tileSize) ||
-        (
-          posX >= el.x &&
+        (posX >= el.x &&
           posX <= el.x + this.tileSize &&
           posY + this.tileSize >= el.y &&
           posY + this.tileSize <= el.y + this.tileSize)
       ) {
-        console.log("jak niby");
         return true;
       }
-    });
+    }
 
     return false;
   };
