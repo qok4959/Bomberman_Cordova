@@ -280,8 +280,6 @@ class CharacterCanvas extends CanvasGame {
     }
 
     this.bombRecovering();
-
-    console.log("detonating " + posX + " " + posY);
   };
 
   bombRecovering = () => {

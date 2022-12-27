@@ -309,7 +309,7 @@ class CharacterCanvas extends CanvasGame {
     return false;
   };
 
-  isWallNearby = (posX, posY) => {
+    = (posX, posY) => {
     for (let el of this.arrOfObjects) {
       if (
         (posX >= el.x &&
