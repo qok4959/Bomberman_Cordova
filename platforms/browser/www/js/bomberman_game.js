@@ -43,8 +43,10 @@ const BACKGROUND = 0;
 // const MAZE = 1;
 const CHARACTER = 1;
 const WIN_MESSAGE = 2;
+const INFO_BOMBS = 3;
+const INFO_LIFES = 4;
 const CHARACTER_SCALE = 15;
-let characterLifes=3;
+let characterLifes = 3;
 let botLifes = 1;
 let Character_WIDTH;
 /******************* END OF Declare game specific data and functions *****************/

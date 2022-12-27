@@ -27,8 +27,8 @@ class Character extends GameObject {
     this.column = 0;
     this.animationStartDelay = 0;
     this.CharacterImage = CharacterImage;
-    this.placingBomb = false;
-    this.bombsToPlace = 3;
+    this.isBombPlaced = false;
+    this.bombsToPlace = 1;
 
     //global variable
     Character_WIDTH = canvas.height / CHARACTER_SCALE;
@@ -115,6 +115,18 @@ class Character extends GameObject {
 
   getPlacingBomb = () => {
     return this.placingBomb;
+  };
+
+  recoverBomb = () => {
+    ++this.bombsToPlace;
+  };
+
+  getIsBombPlaced = () => {
+    return this.isBombPlaced;
+  };
+
+  getBombsToPlace = () => {
+    return this.bombsToPlace;
   };
 
   setBomb = (condition) => {

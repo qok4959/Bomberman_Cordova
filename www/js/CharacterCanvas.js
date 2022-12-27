@@ -20,7 +20,7 @@ class CharacterCanvas extends CanvasGame {
 
     this.borderWidth = canvas.height / (CHARACTER_SCALE / 2);
     this.tileSize = canvas.height / (CHARACTER_SCALE - 2);
-
+    this.everythingIsGenerated = false;
     this.arrOfObjects = [];
     this.generateBorder();
     this.generateObjectsOnCanvas();
@@ -177,10 +177,10 @@ class CharacterCanvas extends CanvasGame {
         }
       }
     }
+    this.everythingIsGenerated = true;
   };
 
   placeABomb = () => {
-    console.log("bomb has been placed");
     let posBombX = gameObjects[CHARACTER].getCentreX();
     let posBombY = gameObjects[CHARACTER].getCentreY();
 
@@ -279,13 +279,24 @@ class CharacterCanvas extends CanvasGame {
       this.resetOffsetCtx(20);
     }
 
-    console.log("detonating " + posX + " " + posY);
+    this.bombRecovering();
+  };
+
+  bombRecovering = () => {
+    setTimeout(() => {
+      gameObjects[CHARACTER].recoverBomb();
+    }, 1000);
   };
 
   resetOffsetCtx = (x) => {
     setTimeout(() => {
       offCtx.reset();
+
       offCtx.drawImage(this.canvasBack, 0, 0);
+      if (this.displayGeneralInfo) {
+        this.displayGeneralInfo();
+      }
+
       if (x > 0) this.resetOffsetCtx(x - 1);
     }, 40);
   };
@@ -325,10 +336,38 @@ class CharacterCanvas extends CanvasGame {
     return false;
   };
 
+  displayGeneralInfo = () => {
+    gameObjects[INFO_BOMBS] = new StaticText(
+      "Bombs: " + gameObjects[CHARACTER].getBombsToPlace(),
+      this.tileSize,
+      this.tileSize * 0.9,
+      "Times Roman",
+      this.tileSize,
+      "red"
+    );
+
+    gameObjects[INFO_LIFES] = new StaticText(
+      "Lifes: " + characterLifes,
+      (canvas.width / this.tileSize - 4) * this.tileSize,
+      this.tileSize * 0.9,
+      "Times Roman",
+      this.tileSize,
+      "red"
+    );
+
+    gameObjects[INFO_BOMBS].start();
+    gameObjects[INFO_LIFES].start();
+  };
+
   playGameLoop() {
     if (gameObjects[CHARACTER].getPlacingBomb()) {
       this.placeABomb();
     }
+
+    if (this.displayGeneralInfo && this.everythingIsGenerated) {
+      this.displayGeneralInfo();
+    }
+    // this.displayGeneralInfo();
     super.playGameLoop();
   }
 
