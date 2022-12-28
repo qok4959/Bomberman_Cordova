@@ -19,7 +19,6 @@ class Character extends GameObject {
 
     this.centreX = centreX;
     this.centreY = centreY;
-    console.log(this.centreX + " " + this.centreY);
 
     this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE = 3; // the number of rows and columns in the gameObject
     this.NUMBER_OF_ROWS_IN_SPRITE_IMAGE = 4; // the number of rows and columns in the gameObject

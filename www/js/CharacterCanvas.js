@@ -12,7 +12,6 @@ class CharacterCanvas extends CanvasGame {
     this.offScreenCtx = this.offScreenCanvas.getContext("2d", {
       willReadFrequently: true,
     });
-
     offCtx = this.offScreenCtx;
 
     this.offScreenCanvas.width = canvas.width;
@@ -24,6 +23,7 @@ class CharacterCanvas extends CanvasGame {
     this.arrOfObjects = [];
     this.generateBorder();
     this.generateObjectsOnCanvas();
+    this.isBombShocking = false;
 
     this.canvasBack = document.createElement("canvas");
     this.canvasBack.width = canvas.width;
@@ -31,10 +31,12 @@ class CharacterCanvas extends CanvasGame {
     this.canvasBack.ctx = this.canvasBack.getContext("2d");
     this.canvasBack.ctx.drawImage(this.offScreenCanvas, 0, 0);
 
+    document.getElementById("btnReset").onclick = this.restartTheGame;
     //canvas offscreen backup
   }
 
   collisionDetection() {
+    if (isGameOver) return;
     if (!this.offScreenCtx) {
       return;
     }
@@ -47,7 +49,13 @@ class CharacterCanvas extends CanvasGame {
         1
       );
 
-      if (this.isTransparent(imageData))
+      if (
+        this.isTransparent(
+          imageData,
+          gameObjects[CHARACTER].getCentreX(),
+          gameObjects[CHARACTER].getCentreY()
+        )
+      )
         gameObjects[CHARACTER].setDirection(DOWN);
     } else if (gameObjects[CHARACTER].getDirection() === LEFT) {
       let imageData = this.offScreenCtx.getImageData(
@@ -57,7 +65,13 @@ class CharacterCanvas extends CanvasGame {
         Character_WIDTH
       );
 
-      if (this.isTransparent(imageData))
+      if (
+        this.isTransparent(
+          imageData,
+          gameObjects[CHARACTER].getCentreX(),
+          gameObjects[CHARACTER].getCentreY()
+        )
+      )
         gameObjects[CHARACTER].setDirection(RIGHT);
     } else if (gameObjects[CHARACTER].getDirection() === DOWN) {
       let imageData = this.offScreenCtx.getImageData(
@@ -67,7 +81,13 @@ class CharacterCanvas extends CanvasGame {
         1
       );
 
-      if (this.isTransparent(imageData))
+      if (
+        this.isTransparent(
+          imageData,
+          gameObjects[CHARACTER].getCentreX(),
+          gameObjects[CHARACTER].getCentreY()
+        )
+      )
         gameObjects[CHARACTER].setDirection(UP);
 
       if (gameObjects[CHARACTER].getCentreY() > canvas.height) {
@@ -97,7 +117,13 @@ class CharacterCanvas extends CanvasGame {
         Character_WIDTH
       );
 
-      if (this.isTransparent(imageData))
+      if (
+        this.isTransparent(
+          imageData,
+          gameObjects[CHARACTER].getCentreX(),
+          gameObjects[CHARACTER].getCentreY()
+        )
+      )
         gameObjects[CHARACTER].setDirection(LEFT);
     }
   }
@@ -198,6 +224,7 @@ class CharacterCanvas extends CanvasGame {
   };
 
   detonateABomb = (posX, posY) => {
+    this.isBombShocking = true;
     let isTopColided = false,
       isLeftColided = false,
       isRightColided = false,
@@ -285,6 +312,7 @@ class CharacterCanvas extends CanvasGame {
   bombRecovering = () => {
     setTimeout(() => {
       gameObjects[CHARACTER].recoverBomb();
+      this.isBombShocking = false;
     }, 1000);
   };
 
@@ -301,12 +329,16 @@ class CharacterCanvas extends CanvasGame {
     }, 40);
   };
 
-  isTransparent = (arr) => {
+  isTransparent = (arr, posX, posY) => {
+    let tempIsTransparent = false;
     for (let i = 3; i < arr.data.length - 4; i += 4) {
-      if (arr.data[i] === 255) return true;
+      if (arr.data[i] === 255) tempIsTransparent = true;
     }
 
-    return false;
+    //bomb radius collision
+    tempIsTransparent && this.checkBombRadiusCollisionWithCharacter(posX, posY);
+
+    return tempIsTransparent;
   };
 
   isWallNearby = (posX, posY) => {
@@ -359,6 +391,64 @@ class CharacterCanvas extends CanvasGame {
     gameObjects[INFO_LIFES].start();
   };
 
+  checkBombRadiusCollisionWithCharacter = (posX, posY) => {
+    this.isBombShocking &&
+      !this.isWallNearby(posX, posY) &&
+      this.decreaseCharacterLifes();
+  };
+
+  decreaseCharacterLifes = () => {
+    if (characterLifes > 1) {
+      gameObjects[CHARACTER].centreX = this.tileSize;
+      gameObjects[CHARACTER].centreY = this.tileSize;
+      --characterLifes;
+    } else {
+      --characterLifes;
+      isGameOver = true;
+      /* Player has won */
+      for (
+        let i = 0;
+        i < gameObjects.length;
+        i++ /* stop all gameObjects from animating */
+      ) {
+        gameObjects[i].stop();
+      }
+      gameObjects[WIN_MESSAGE] = new StaticText(
+        "Game over!",
+        canvas.width / 2 - 3 * this.tileSize,
+        canvas.height / 2,
+        "Times Roman",
+        this.tileSize,
+        "red"
+      );
+      gameObjects[WIN_MESSAGE].start(); /* render win message */
+      document.getElementById("btnReset").style.visibility = "visible";
+    }
+  };
+
+  restartTheGame = () => {
+    console.log("restarting!");
+    isGameOver = false;
+    characterLifes = 1;
+
+    for (let i = gameObjects.length; i >= 3; i--) {
+      gameObjects.pop();
+    }
+    console.log("length:" + gameObjects.length);
+    for (
+      let i = 0;
+      i < gameObjects.length;
+      i++ /* stop all gameObjects from animating */
+    ) {
+      gameObjects[i].start();
+    }
+    this.resetOffsetCtx(1);
+    document.getElementById("btnReset").style.visibility = "hidden";
+
+    gameObjects[CHARACTER].centreX = this.tileSize;
+    gameObjects[CHARACTER].centreY = this.tileSize;
+    // onAllAssetsLoaded();
+  };
   playGameLoop() {
     if (gameObjects[CHARACTER].getPlacingBomb()) {
       this.placeABomb();

@@ -46,9 +46,10 @@ const WIN_MESSAGE = 2;
 const INFO_BOMBS = 3;
 const INFO_LIFES = 4;
 const CHARACTER_SCALE = 15;
-let characterLifes = 3;
+let characterLifes = 1;
 let botLifes = 1;
 let Character_WIDTH;
+let isGameOver = false;
 /******************* END OF Declare game specific data and functions *****************/
 
 /* Always have a playGame() function                                     */
@@ -97,6 +98,7 @@ function playGame() {
 
   /* If they are needed, then include any game-specific mouse and keyboard listners */
   document.addEventListener("keydown", function (e) {
+    if (isGameOver) return;
     if (e.keyCode === 37) {
       // left
       gameObjects[CHARACTER].setDirection(LEFT);
