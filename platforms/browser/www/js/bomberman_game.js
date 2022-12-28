@@ -46,7 +46,7 @@ const WIN_MESSAGE = 2;
 const INFO_BOMBS = 3;
 const INFO_LIFES = 4;
 const CHARACTER_SCALE = 15;
-let characterLifes = 1;
+let characterLifes = 3;
 let botLifes = 1;
 let Character_WIDTH;
 let isGameOver = false;
