@@ -242,7 +242,7 @@ class CharacterCanvas extends CanvasGame {
       }
 
       //top
-      if (!this.isWallNearby(posX, posY + i * this.tileSize) && !isTopColided) {
+      if (!this.isBombRadiusGoingThroughAWall(posX, posY + i * this.tileSize) && !isTopColided) {
         gameObjects[gameObjects.length] = new Explosion(
           explosionImage,
           posX,
@@ -256,7 +256,7 @@ class CharacterCanvas extends CanvasGame {
 
       //right radius
       if (
-        !this.isWallNearby(posX + i * this.tileSize, posY) &&
+        !this.isBombRadiusGoingThroughAWall(posX + i * this.tileSize, posY) &&
         !isRightColided
       ) {
         gameObjects[gameObjects.length] = new Explosion(
@@ -272,7 +272,7 @@ class CharacterCanvas extends CanvasGame {
 
       //left radius
       if (
-        !this.isWallNearby(posX - i * this.tileSize, posY) &&
+        !this.isBombRadiusGoingThroughAWall(posX - i * this.tileSize, posY) &&
         !isLeftColided
       ) {
         gameObjects[gameObjects.length] = new Explosion(
@@ -288,7 +288,7 @@ class CharacterCanvas extends CanvasGame {
 
       //bottom radius
       if (
-        !this.isWallNearby(posX, posY - i * this.tileSize) &&
+        !this.isBombRadiusGoingThroughAWall(posX, posY - i * this.tileSize) &&
         !isBottomColided
       ) {
         gameObjects[gameObjects.length] = new Explosion(
@@ -317,8 +317,12 @@ class CharacterCanvas extends CanvasGame {
   };
 
   resetOffsetCtx = (x) => {
+    console.log("resetOffSet");
     setTimeout(() => {
-      offCtx.reset();
+      console.log("resetOffSetTimeout");
+      // offCtx.reset();
+
+      offCtx.clearRect(0, 0, canvas.width, canvas.height);
 
       offCtx.drawImage(this.canvasBack, 0, 0);
       if (this.displayGeneralInfo) {
@@ -341,7 +345,7 @@ class CharacterCanvas extends CanvasGame {
     return tempIsTransparent;
   };
 
-  isWallNearby = (posX, posY) => {
+  isBombRadiusGoingThroughAWall = (posX, posY) => {
     for (let el of this.arrOfObjects) {
       if (
         (posX >= el.x &&
@@ -393,14 +397,14 @@ class CharacterCanvas extends CanvasGame {
 
   checkBombRadiusCollisionWithCharacter = (posX, posY) => {
     this.isBombShocking &&
-      !this.isWallNearby(posX, posY) &&
+      !this.isBombRadiusGoingThroughAWall(posX, posY) &&
       this.decreaseCharacterLifes();
   };
 
   decreaseCharacterLifes = () => {
     if (characterLifes > 1) {
-      gameObjects[CHARACTER].centreX = this.tileSize;
-      gameObjects[CHARACTER].centreY = this.tileSize;
+      gameObjects[CHARACTER].centreX = this.tileSize * 2;
+      gameObjects[CHARACTER].centreY = this.tileSize * 2;
       --characterLifes;
     } else {
       --characterLifes;
@@ -445,8 +449,8 @@ class CharacterCanvas extends CanvasGame {
     this.resetOffsetCtx(1);
     document.getElementById("btnReset").style.visibility = "hidden";
 
-    gameObjects[CHARACTER].centreX = this.tileSize;
-    gameObjects[CHARACTER].centreY = this.tileSize;
+    gameObjects[CHARACTER].centreX = this.tileSize * 2;
+    gameObjects[CHARACTER].centreY = this.tileSize * 2;
     // onAllAssetsLoaded();
   };
   playGameLoop() {
@@ -463,7 +467,7 @@ class CharacterCanvas extends CanvasGame {
 
   render() {
     super.render();
-
+    // console.log("xd");
     if (this.offScreenCanvas) ctx.drawImage(this.offScreenCanvas, 0, 0);
   }
 }

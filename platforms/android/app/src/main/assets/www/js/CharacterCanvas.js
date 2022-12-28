@@ -317,8 +317,12 @@ class CharacterCanvas extends CanvasGame {
   };
 
   resetOffsetCtx = (x) => {
+    console.log("resetOffSet");
     setTimeout(() => {
-      offCtx.reset();
+      console.log("resetOffSetTimeout");
+      // offCtx.reset();
+
+      offCtx.clearRect(0, 0, canvas.width, canvas.height);
 
       offCtx.drawImage(this.canvasBack, 0, 0);
       if (this.displayGeneralInfo) {
@@ -399,8 +403,8 @@ class CharacterCanvas extends CanvasGame {
 
   decreaseCharacterLifes = () => {
     if (characterLifes > 1) {
-      gameObjects[CHARACTER].centreX = this.tileSize;
-      gameObjects[CHARACTER].centreY = this.tileSize;
+      gameObjects[CHARACTER].centreX = this.tileSize * 2;
+      gameObjects[CHARACTER].centreY = this.tileSize * 2;
       --characterLifes;
     } else {
       --characterLifes;
@@ -445,8 +449,8 @@ class CharacterCanvas extends CanvasGame {
     this.resetOffsetCtx(1);
     document.getElementById("btnReset").style.visibility = "hidden";
 
-    gameObjects[CHARACTER].centreX = this.tileSize;
-    gameObjects[CHARACTER].centreY = this.tileSize;
+    gameObjects[CHARACTER].centreX = this.tileSize * 2;
+    gameObjects[CHARACTER].centreY = this.tileSize * 2;
     // onAllAssetsLoaded();
   };
   playGameLoop() {
@@ -463,7 +467,7 @@ class CharacterCanvas extends CanvasGame {
 
   render() {
     super.render();
-
+    // console.log("xd");
     if (this.offScreenCanvas) ctx.drawImage(this.offScreenCanvas, 0, 0);
   }
 }

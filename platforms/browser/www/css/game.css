@@ -30,7 +30,7 @@
   margin-right: auto;
   top: 30vh;
   width: 50vw;
-  color: red;
+  color: #9d311e;
   z-index: 100;
   font-size: 20vh;
 }
@@ -48,7 +48,6 @@
   color: whitesmoke;
   font-size: 3rem;
   background-color: #9d311e;
-
   visibility: hidden;
 }
 
