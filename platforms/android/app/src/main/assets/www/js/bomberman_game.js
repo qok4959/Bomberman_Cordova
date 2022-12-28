@@ -6,14 +6,27 @@
 /******************** Declare game specific global data and functions *****************/
 /* images must be declared as global, so that they will load before the game starts  */
 
-let CharacterImage = new Image();
+const CharacterImage = new Image();
 CharacterImage.src = "images/characters_sheet.png";
 
-let background = new Image();
+const background = new Image();
 background.src = "images/blue_background.jpg";
 
-let tileObstacle = new Image();
+const tileObstacle = new Image();
 tileObstacle.src = "images/tile_obstacle.png";
+
+const tileBomb = new Image();
+tileBomb.src = "images/bomb.png";
+
+//###################################test explosion
+const explosionBase = new Image();
+explosionBase.src = "images/explosion_base.png";
+
+let explosionImage = new Image();
+explosionImage.src = "images/explosions_sheet.png";
+
+let offCtx = null;
+//###################################test explosion
 
 /* Direction that the Character is walking */
 /* Note that this matches the row in the gameObject image for the given direction */
@@ -30,8 +43,13 @@ const BACKGROUND = 0;
 // const MAZE = 1;
 const CHARACTER = 1;
 const WIN_MESSAGE = 2;
+const INFO_BOMBS = 3;
+const INFO_LIFES = 4;
 const CHARACTER_SCALE = 15;
+let characterLifes = 1;
+let botLifes = 1;
 let Character_WIDTH;
+let isGameOver = false;
 /******************* END OF Declare game specific data and functions *****************/
 
 /* Always have a playGame() function                                     */
@@ -80,6 +98,7 @@ function playGame() {
 
   /* If they are needed, then include any game-specific mouse and keyboard listners */
   document.addEventListener("keydown", function (e) {
+    if (isGameOver) return;
     if (e.keyCode === 37) {
       // left
       gameObjects[CHARACTER].setDirection(LEFT);
@@ -92,6 +111,9 @@ function playGame() {
     } else if (e.keyCode === 40) {
       // down
       gameObjects[CHARACTER].setDirection(DOWN);
+    } else if (e.keyCode === 32) {
+      // down
+      gameObjects[CHARACTER].setBomb(true);
     }
   });
 }

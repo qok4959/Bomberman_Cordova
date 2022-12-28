@@ -19,7 +19,6 @@ class Character extends GameObject {
 
     this.centreX = centreX;
     this.centreY = centreY;
-    console.log(this.centreX + " " + this.centreY);
 
     this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE = 3; // the number of rows and columns in the gameObject
     this.NUMBER_OF_ROWS_IN_SPRITE_IMAGE = 4; // the number of rows and columns in the gameObject
@@ -27,6 +26,8 @@ class Character extends GameObject {
     this.column = 0;
     this.animationStartDelay = 0;
     this.CharacterImage = CharacterImage;
+    this.isBombPlaced = false;
+    this.bombsToPlace = 1;
 
     //global variable
     Character_WIDTH = canvas.height / CHARACTER_SCALE;
@@ -83,7 +84,6 @@ class Character extends GameObject {
       this.SPRITE_HEIGHT,
       this.centreX,
       this.centreY,
-      // this.centreY - this.SPRITE_HEIGHT / 2,
       this.WIDTH_OF_Character_ON_CANVAS,
       this.HEIGHT_OF_Character_ON_CANVAS
     );
@@ -111,4 +111,29 @@ class Character extends GameObject {
   getCentreY() {
     return this.centreY;
   }
+
+  getPlacingBomb = () => {
+    return this.placingBomb;
+  };
+
+  recoverBomb = () => {
+    ++this.bombsToPlace;
+  };
+
+  getIsBombPlaced = () => {
+    return this.isBombPlaced;
+  };
+
+  getBombsToPlace = () => {
+    return this.bombsToPlace;
+  };
+
+  setBomb = (condition) => {
+    if (this.bombsToPlace > 0 && condition) {
+      this.placingBomb = true;
+      --this.bombsToPlace;
+    } else {
+      this.placingBomb = false;
+    }
+  };
 }

@@ -9,19 +9,13 @@
   flex-direction: column;
 }
 
-#Character {
-}
-
 #gameCanvas {
   /* the canvas styling usually does not change */
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  /* outline: 1px solid darkgrey; */
   width: 95vw;
-
-  /* margin: auto; */
   height: 50vh;
   border: 3px solid black;
   border-radius: 10px;
@@ -30,15 +24,46 @@
 #loadingMessage {
   /* the loading message styling usually does not change */
   position: absolute;
-  top: 100px;
-  left: 100px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: 30vh;
+  width: 50vw;
+  color: red;
   z-index: 100;
-  font-size: 50px;
+  font-size: 20vh;
+}
+
+#btnReset {
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: 60vh;
+  width: 20vw;
+  height: 10vh;
+  color: whitesmoke;
+  font-size: 3rem;
+  background-color: #9d311e;
+
+  visibility: hidden;
 }
 
 @media (orientation: landscape) {
   #gameCanvas {
     height: 96vh;
     width: 95vw;
+    font-size: 20vh;
+  }
+}
+
+@media (orientation: portrait) {
+  #loadingMessage {
+    font-size: 5vh;
+    top: 0;
+    top: 23vh;
   }
 }
