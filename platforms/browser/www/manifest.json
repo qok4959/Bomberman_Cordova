@@ -1,10 +1,10 @@
 {
   "background_color": "#FFF",
   "display": "standalone",
-  "name": "HelloCordova",
-  "short_name": "HelloCordova",
+  "name": "BombermanCordova",
+  "short_name": "BombermanCordova",
   "version": "io.cordova.hellocordova",
-  "description": "Sample Apache Cordova App",
+  "description": "BombermanCordova",
   "author": "Apache Cordova Team",
   "icons": [],
   "start_url": "index.html"

@@ -18,15 +18,10 @@ tileObstacle.src = "images/tile_obstacle.png";
 const tileBomb = new Image();
 tileBomb.src = "images/bomb.png";
 
-//###################################test explosion
-const explosionBase = new Image();
-explosionBase.src = "images/explosion_base.png";
-
 let explosionImage = new Image();
 explosionImage.src = "images/explosions_sheet.png";
 
 let offCtx = null;
-//###################################test explosion
 
 /* Direction that the Character is walking */
 /* Note that this matches the row in the gameObject image for the given direction */
@@ -40,13 +35,13 @@ const STOPPED = 4;
 
 /* These are the positions that each gameObject is held in the gameObjects[] array */
 const BACKGROUND = 0;
-// const MAZE = 1;
 const CHARACTER = 1;
-const WIN_MESSAGE = 2;
-const INFO_BOMBS = 3;
-const INFO_LIFES = 4;
+const INFO_BOMBS = 2;
+const INFO_LIFES = 3;
+const WIN_MESSAGE = 4;
+
 const CHARACTER_SCALE = 15;
-let characterLifes = 3;
+let characterLifes = 1;
 let botLifes = 1;
 let Character_WIDTH;
 let isGameOver = false;
