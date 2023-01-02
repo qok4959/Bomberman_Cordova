@@ -7,7 +7,7 @@ class Explosion extends GameObject {
 
   constructor(explosionImage, centreX, centreY, sizeX, sizeY, delay = 0) {
     super(
-      40,
+      30,
       delay
     ); /* as this class extends from GameObject, you must always call super() */
 
@@ -38,6 +38,8 @@ class Explosion extends GameObject {
   updateState() {
     this.currentgameObject++;
 
+    if (this.row > 5) this.stopAndHide();
+
     this.column++;
     if (this.column >= this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE) {
       this.column = 0;
@@ -48,19 +50,24 @@ class Explosion extends GameObject {
   render() {
     console.log(
       "explosionRender",
-      (this.centreX =
-        +"\t" + this.centreY + "\t" + squareSizeX + "\t" + squareSizeY)
+      this.centreX +
+        "\t" +
+        this.centreY +
+        "\t" +
+        squareSizeX +
+        "\t" +
+        squareSizeY
     );
     ctx.drawImage(
       this.explosionImage,
+      this.column * this.SPRITE_WIDTH,
+      this.row * this.SPRITE_WIDTH,
+      this.SPRITE_WIDTH,
+      this.SPRITE_HEIGHT,
       this.centreX * this.sizeX,
-      this.centreY * this.sizeX,
+      this.centreY * this.sizeY,
       this.sizeX,
       this.sizeY
-      // this.centreX,
-      // this.centreY,
-      // this.sizeX,
-      // this.sizeY
     );
   }
 }

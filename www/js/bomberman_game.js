@@ -41,6 +41,9 @@ const INFO_LIFES = 3;
 const WIN_MESSAGE = 4;
 const BOT_NUMBER = 5;
 const CHARACTER_SCALE = 25;
+const PLAYER_BOMB = 10;
+const BOT_BOMB = 11;
+
 let board = [];
 let TILE_SIZE;
 let squareSizeX;

@@ -68,8 +68,14 @@ class Game extends CanvasGame {
     console.log("placeABomb");
     let posBombX = gameObjects[PLAYER_NUMBER].getBombPosX();
     let posBombY = gameObjects[PLAYER_NUMBER].getBombPosY();
-    plane[posBombX][posBombY] = 3;
-    ctx.drawImage(tileBomb, posBombX, posBombY, squareSizeX, squareSizeY);
+    plane[posBombX][posBombY] = 4;
+    ctx.drawImage(
+      tileBomb,
+      posBombX * squareSizeX,
+      posBombY * squareSizeY,
+      squareSizeX,
+      squareSizeY
+    );
     setTimeout(() => {
       this.detonateABomb(posBombX, posBombY);
     }, 1000);
@@ -83,13 +89,10 @@ class Game extends CanvasGame {
 
     const bombRadius = 3;
     for (let i = 0; i < bombRadius; i++) {
-      new Explosion(
-        explosionImage,
-        posX,
-        posY,
-        squareSizeX,
-        squareSizeY
-      ).start();
+      plane[posX + i][posY] = 3;
+      plane[posX - i][posY] = 3;
+      plane[posX][posY + i] = 3;
+      plane[posX][posY - i] = 3;
     }
 
     this.bombRecovering(posX, posY);
@@ -99,8 +102,15 @@ class Game extends CanvasGame {
   bombRecovering = (posX, posY) => {
     setTimeout(() => {
       gameObjects[PLAYER_NUMBER].recoverBomb();
+
+      const bombRadius = 3;
+      for (let i = 0; i < bombRadius; i++) {
+        plane[posX + i][posY] = 0;
+        plane[posX - i][posY] = 0;
+        plane[posX][posY + i] = 0;
+        plane[posX][posY - i] = 0;
+      }
       this.isBombShocking = false;
-      plane[posX][posY] = 0;
     }, 1000);
   };
 
@@ -170,16 +180,20 @@ class Game extends CanvasGame {
             //   squareSizeX,
             //   squareSizeY
             // );
-            gameObjects[10] = new Explosion(
+            let ind = indexX * indexY;
+            gameObjects[ind] = new Explosion(
               explosionImage,
               indexX,
               indexY,
-              100,
-              100
+              squareSizeX,
+              squareSizeY,
+              10
             );
-            gameObjects[10].start();
+            gameObjects[ind].start();
+
             break;
           case 4:
+            ctx.drawImage(tileBomb, indexX, indexY, squareSizeX, squareSizeY);
             break;
         }
       });
@@ -232,9 +246,10 @@ class Game extends CanvasGame {
     if (this.displayGeneralInfo && this.everythingIsGenerated) {
       this.displayGeneralInfo();
     }
-    if (gameObjects[PLAYER_NUMBER].getPlacingBomb()) {
-      this.placeABomb();
-    }
+    if (gameObjects[PLAYER_NUMBER])
+      if (gameObjects[PLAYER_NUMBER].getPlacingBomb()) {
+        this.placeABomb();
+      }
     super.playGameLoop();
   }
 
