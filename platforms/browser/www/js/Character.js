@@ -22,7 +22,7 @@ class Character extends GameObject {
 
     this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE = 3; // the number of rows and columns in the gameObject
     this.NUMBER_OF_ROWS_IN_SPRITE_IMAGE = 4; // the number of rows and columns in the gameObject
-
+    this.placingBomb = false;
     this.column = 0;
     this.animationStartDelay = 0;
     this.CharacterImage = CharacterImage;
@@ -75,7 +75,7 @@ class Character extends GameObject {
     }
   }
 
-  render() {
+  drawCharacter = () => {
     ctx.drawImage(
       this.CharacterImage,
       this.column * this.SPRITE_WIDTH + 3 * this.SPRITE_WIDTH * 2,
@@ -87,7 +87,7 @@ class Character extends GameObject {
       this.WIDTH_OF_Character_ON_CANVAS,
       this.HEIGHT_OF_Character_ON_CANVAS
     );
-  }
+  };
 
   setDirection(newDirection) {
     this.direction = newDirection;

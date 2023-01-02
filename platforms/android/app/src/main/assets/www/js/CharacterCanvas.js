@@ -3,7 +3,7 @@
 /* The game allows the user to walk a Character around a maze.              */
 /* If the Character is guided to the maze exit, then a win message appears. */
 
-class CharacterCanvas extends CanvasGame {
+class Game extends CanvasGame {
   constructor() {
     super();
 

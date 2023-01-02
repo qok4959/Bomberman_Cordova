@@ -86,7 +86,7 @@ function playGame() {
   /* END OF game specific code. */
 
   /* Always create a game that uses the gameObject array */
-  let game = new CharacterCanvas();
+  let game = new Game();
 
   /* Always play the game */
   game.start();

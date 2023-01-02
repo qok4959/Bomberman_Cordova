@@ -4,13 +4,14 @@ class BombermanCharacter extends Character {
   /* Each gameObject MUST have a constructor() and a render() method.        */
   /* If the object animates, then it must also have an updateState() method. */
 
-  constructor(CharacterImage, centreX, centreY) {
+  constructor(CharacterImage, centreX, centreY, charSize) {
     super(
       CharacterImage,
       25,
       25,
-      canvas.height / CHARACTER_SCALE,
-      canvas.height / CHARACTER_SCALE
+      charSize,
+      charSize,
+      PLAYER_NUMBER
     ); /* as this class extends from GameObject, you must always call super() */
 
     /* These variables depend on the object */
@@ -22,6 +23,6 @@ class BombermanCharacter extends Character {
     this.centreY = centreY;
 
     this.Character_SPEED =
-      canvas.width / CHARACTER_SCALE / 10; /* set the Character's speed */
+      canvas.width / CHARACTER_SCALE / 10 / 5; /* set the Character's speed */
   }
 }
