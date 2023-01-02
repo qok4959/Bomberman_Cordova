@@ -43,18 +43,27 @@ const BOT_NUMBER = 5;
 const CHARACTER_SCALE = 25;
 let board = [];
 let TILE_SIZE;
+let squareSizeX;
+let squareSizeY;
 
 let characterLifes = 1;
 let botLifes = 1;
 let Character_WIDTH;
 let isGameOver = false;
 let plane = [];
+let moved = false;
 /******************* END OF Declare player specific data and functions *****************/
 
 /* Always have a playGame() function                                     */
 /* However, the content of this function will be different for each player */
 function playGame() {
   TILE_SIZE = canvas.height / (CHARACTER_SCALE - 2);
+  if (squareSizeX == undefined) {
+    squareSizeX = canvas.width / CHARACTER_SCALE;
+  }
+  if (squareSizeY == undefined) {
+    squareSizeY = canvas.height / CHARACTER_SCALE;
+  }
   /* We need to initialise the player objects outside of the player class */
   /* This function does this initialisation.                          */
   /* This function will:                                              */
@@ -110,7 +119,7 @@ function playGame() {
 
   /* If they are needed, then include any player-specific mouse and keyboard listners */
   document.addEventListener("keydown", function (e) {
-    if (isGameOver) return;
+    if (isGameOver || moved) return;
     if (e.keyCode === 37) {
       // left
       gameObjects[PLAYER_NUMBER].setDirection(LEFT);
@@ -127,5 +136,9 @@ function playGame() {
       // down
       gameObjects[PLAYER_NUMBER].setBomb(true);
     }
+    moved = true;
+    setTimeout(() => {
+      moved = false;
+    }, 100);
   });
 }

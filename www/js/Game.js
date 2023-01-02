@@ -10,8 +10,8 @@ class Game extends CanvasGame {
     this.PLAYER_NUMBER = 2;
     /* this.mazeCtx will be used for collision detection */
 
-    this.squareSizeX = canvas.width / this.widthOfAPlane;
-    this.squareSizeY = canvas.height / this.widthOfAPlane;
+    // squareSizeX = canvas.width / this.widthOfAPlane;
+    // squareSizeY = canvas.height / this.widthOfAPlane;
     this.everythingIsGenerated = false;
 
     this.generateBorder();
@@ -44,7 +44,7 @@ class Game extends CanvasGame {
       }
       plane.push(tempArr);
     }
-    console.log(plane);
+    // console.log(plane);
   };
 
   generateObjectsOnCanvas = () => {
@@ -55,44 +55,52 @@ class Game extends CanvasGame {
         }
       }
     }
-    console.log(plane);
 
     plane[3][3] = 2;
-    // plane[4][4] = 2;
-    // plane[5][5] = 2;
-    // plane[6][6] = 2;
+
+    gameObjects[PLAYER_NUMBER].setCentreX(3);
+    gameObjects[PLAYER_NUMBER].setCentreY(3);
     this.everythingIsGenerated = true;
+    console.log(plane);
   };
 
   placeABomb = () => {
-    let posBombX = gameObjects[this.PLAYER_NUMBER].getCentreX();
-    let posBombY = gameObjects[this.PLAYER_NUMBER].getCentreY();
-
-    this.offScreenCtx.drawImage(
-      tileBomb,
-      posBombX,
-      posBombY,
-      this.tileSize,
-      this.tileSize
-    );
+    console.log("placeABomb");
+    let posBombX = gameObjects[PLAYER_NUMBER].getBombPosX();
+    let posBombY = gameObjects[PLAYER_NUMBER].getBombPosY();
+    plane[posBombX][posBombY] = 3;
+    ctx.drawImage(tileBomb, posBombX, posBombY, squareSizeX, squareSizeY);
     setTimeout(() => {
       this.detonateABomb(posBombX, posBombY);
     }, 1000);
-    gameObjects[this.PLAYER_NUMBER].setBomb(false);
+    gameObjects[PLAYER_NUMBER].setBomb(false);
   };
 
   // TODO fix this
   detonateABomb = (posX, posY) => {
+    console.log("detonateABomb");
     this.isBombShocking = true;
 
-    this.bombRecovering();
+    const bombRadius = 3;
+    for (let i = 0; i < bombRadius; i++) {
+      new Explosion(
+        explosionImage,
+        posX,
+        posY,
+        squareSizeX,
+        squareSizeY
+      ).start();
+    }
+
+    this.bombRecovering(posX, posY);
   };
 
   //@TODO
-  bombRecovering = () => {
+  bombRecovering = (posX, posY) => {
     setTimeout(() => {
-      gameObjects[this.PLAYER_NUMBER].recoverBomb();
+      gameObjects[PLAYER_NUMBER].recoverBomb();
       this.isBombShocking = false;
+      plane[posX][posY] = 0;
     }, 1000);
   };
 
@@ -127,10 +135,8 @@ class Game extends CanvasGame {
   };
 
   renderPlane = () => {
-    console.log("renderPlane");
     plane.map((posX, indexX) => {
       posX.map((posY, indexY) => {
-        console.log(indexX + " " + indexY + " " + this.squareSizeX);
         switch (posY) {
           case 0:
             // ctx.drawImage(tileObstacle, 100, 100, 100, 100);
@@ -145,17 +151,33 @@ class Game extends CanvasGame {
           case 1:
             ctx.drawImage(
               tileObstacle,
-              indexX * this.squareSizeX,
-              indexY * this.squareSizeY,
-              this.squareSizeX,
-              this.squareSizeY
+              indexX * squareSizeX,
+              indexY * squareSizeY,
+              squareSizeX,
+              squareSizeY
             );
 
             break;
           case 2:
-            gameObjects[PLAYER_NUMBER].drawCharacter();
+            gameObjects[PLAYER_NUMBER].drawCharacter(indexX, indexY);
             break;
           case 3:
+            console.log("case 3");
+            // let explo = new Explosion(
+            //   explosionImage,
+            //   indexX,
+            //   indexY,
+            //   squareSizeX,
+            //   squareSizeY
+            // );
+            gameObjects[10] = new Explosion(
+              explosionImage,
+              indexX,
+              indexY,
+              100,
+              100
+            );
+            gameObjects[10].start();
             break;
           case 4:
             break;
@@ -209,6 +231,9 @@ class Game extends CanvasGame {
   playGameLoop() {
     if (this.displayGeneralInfo && this.everythingIsGenerated) {
       this.displayGeneralInfo();
+    }
+    if (gameObjects[PLAYER_NUMBER].getPlacingBomb()) {
+      this.placeABomb();
     }
     super.playGameLoop();
   }

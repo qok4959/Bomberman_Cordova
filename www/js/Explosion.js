@@ -5,7 +5,7 @@ class Explosion extends GameObject {
   /* Each gameObject MUST have a constructor() and a render() method.        */
   /* If the object animates, then it must also have an updateState() method. */
 
-  constructor(explosionImage, centreX, centreY, size, delay = 0) {
+  constructor(explosionImage, centreX, centreY, sizeX, sizeY, delay = 0) {
     super(
       40,
       delay
@@ -16,7 +16,8 @@ class Explosion extends GameObject {
 
     this.centreX = centreX;
     this.centreY = centreY;
-    this.size = size;
+    this.sizeX = sizeX;
+    this.sizeY = sizeY;
     this.delay = delay;
     this.NUMBER_OF_SPRITES = 25; // the number of gameObjects in the gameObject image
     this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE = 5; // the number of columns in the gameObject image
@@ -45,17 +46,21 @@ class Explosion extends GameObject {
   }
 
   render() {
-    console.log("explosionRender");
-    offCtx.drawImage(
+    console.log(
+      "explosionRender",
+      (this.centreX =
+        +"\t" + this.centreY + "\t" + squareSizeX + "\t" + squareSizeY)
+    );
+    ctx.drawImage(
       this.explosionImage,
-      this.column * this.SPRITE_WIDTH,
-      this.row * this.SPRITE_WIDTH,
-      this.SPRITE_WIDTH,
-      this.SPRITE_HEIGHT,
-      this.centreX,
-      this.centreY,
-      this.size,
-      this.size
+      this.centreX * this.sizeX,
+      this.centreY * this.sizeX,
+      this.sizeX,
+      this.sizeY
+      // this.centreX,
+      // this.centreY,
+      // this.sizeX,
+      // this.sizeY
     );
   }
 }

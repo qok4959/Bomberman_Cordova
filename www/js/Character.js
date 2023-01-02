@@ -19,6 +19,8 @@ class Character extends GameObject {
 
     this.centreX = centreX;
     this.centreY = centreY;
+    this.bombPosX;
+    this.bombPosY;
 
     this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE = 3; // the number of rows and columns in the gameObject
     this.NUMBER_OF_ROWS_IN_SPRITE_IMAGE = 4; // the number of rows and columns in the gameObject
@@ -45,14 +47,47 @@ class Character extends GameObject {
   }
 
   updateState() {
+    // if (this.direction === UP) {
+    //   this.centreY -= this.Character_SPEED;
+    // } else if (this.direction === LEFT) {
+    //   this.centreX -= this.Character_SPEED;
+    // } else if (this.direction === DOWN) {
+    //   this.centreY += this.Character_SPEED;
+    // } else if (this.direction === RIGHT) {
+    //   this.centreX += this.Character_SPEED;
+    // }
+    // if (this.direction !== STOPPED) {
+    //   this.column++;
+    //   this.currentgameObject++;
+    //   if (this.currentgameObject >= this.endgameObject) {
+    //     this.row = this.direction;
+    //     this.column = 0;
+    //     this.currentgameObject = this.startgameObject;
+    //   } else if (this.column >= this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE) {
+    //     this.column = 0;
+    //     this.row++;
+    //   }
+    // } // stopped
+    // else {
+    //   // this.column = 0;
+    //   this.row = 2;
+    //   this.currentgameObject = 0;
+    // }
+  }
+
+  move = () => {
     if (this.direction === UP) {
-      this.centreY -= this.Character_SPEED;
+      if (plane[this.centreX][this.centreY - this.Character_SPEED] != 1)
+        this.centreY -= this.Character_SPEED;
     } else if (this.direction === LEFT) {
-      this.centreX -= this.Character_SPEED;
+      if (plane[this.centreX - this.Character_SPEED][this.centreY] != 1)
+        this.centreX -= this.Character_SPEED;
     } else if (this.direction === DOWN) {
-      this.centreY += this.Character_SPEED;
+      if (plane[this.centreX][this.centreY + this.Character_SPEED] != 1)
+        this.centreY += this.Character_SPEED;
     } else if (this.direction === RIGHT) {
-      this.centreX += this.Character_SPEED;
+      if (plane[this.centreX + this.Character_SPEED][this.centreY] != 1)
+        this.centreX += this.Character_SPEED;
     }
 
     if (this.direction !== STOPPED) {
@@ -73,21 +108,25 @@ class Character extends GameObject {
       this.row = 2;
       this.currentgameObject = 0;
     }
-  }
+  };
 
-  drawCharacter = () => {
+  drawCharacter = (x, y) => {
     ctx.drawImage(
       this.CharacterImage,
       this.column * this.SPRITE_WIDTH + 3 * this.SPRITE_WIDTH * 2,
       this.row * this.SPRITE_WIDTH + 4 * this.SPRITE_HEIGHT,
       this.SPRITE_WIDTH,
       this.SPRITE_HEIGHT,
-      this.centreX,
-      this.centreY,
-      this.WIDTH_OF_Character_ON_CANVAS,
-      this.HEIGHT_OF_Character_ON_CANVAS
+      this.centreX * squareSizeX,
+      this.centreY * squareSizeY,
+      squareSizeX,
+      squareSizeY
     );
+
+    this.drawAnimation(x, y);
   };
+
+  drawAnimation = (x, y) => {};
 
   setDirection(newDirection) {
     this.direction = newDirection;
@@ -98,10 +137,20 @@ class Character extends GameObject {
     this.currentgameObject = this.startgameObject;
     this.row = this.direction;
     this.column = 0;
+
+    this.move();
   }
 
   getDirection() {
     return this.direction;
+  }
+
+  setCentreX(val) {
+    this.centreX = val;
+  }
+
+  setCentreY(val) {
+    this.centreY = val;
   }
 
   getCentreX() {
@@ -128,9 +177,20 @@ class Character extends GameObject {
     return this.bombsToPlace;
   };
 
+  getBombPosX = () => {
+    return this.bombPosX;
+  };
+
+  getBombPosY = () => {
+    return this.bombPosY;
+  };
+
   setBomb = (condition) => {
+    console.log("setBomb");
     if (this.bombsToPlace > 0 && condition) {
       this.placingBomb = true;
+      this.bombPosX = this.centreX;
+      this.bombPosY = this.centreY;
       --this.bombsToPlace;
     } else {
       this.placingBomb = false;
