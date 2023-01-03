@@ -24,12 +24,13 @@ class Character extends GameObject {
 
     this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE = 3; // the number of rows and columns in the gameObject
     this.NUMBER_OF_ROWS_IN_SPRITE_IMAGE = 4; // the number of rows and columns in the gameObject
-    this.placingBomb = false;
+    this.isBombPlaced = false;
     this.column = 0;
     this.animationStartDelay = 0;
     this.CharacterImage = CharacterImage;
-    this.isBombPlaced = false;
-    this.bombsToPlace = 1;
+
+    this.maxBombs = 1;
+    this.bombsToPlace = 0;
 
     //global variable
     Character_WIDTH = canvas.height / CHARACTER_SCALE;
@@ -161,20 +162,16 @@ class Character extends GameObject {
     return this.centreY;
   }
 
-  getPlacingBomb = () => {
-    return this.placingBomb;
-  };
-
-  recoverBomb = () => {
-    ++this.bombsToPlace;
-  };
-
   getIsBombPlaced = () => {
     return this.isBombPlaced;
   };
 
-  getBombsToPlace = () => {
-    return this.bombsToPlace;
+  recoverBomb = () => {
+    ++this.maxBombs;
+  };
+
+  getMaxBombs = () => {
+    return this.maxBombs;
   };
 
   getBombPosX = () => {
@@ -185,15 +182,23 @@ class Character extends GameObject {
     return this.bombPosY;
   };
 
+  getBombsToPlace = () => {
+    return this.bombsToPlace;
+  };
+
+  decreaseBombsToPlace() {
+    this.bombsToPlace > 0 && --this.bombsToPlace;
+  }
+
   setBomb = (condition) => {
-    console.log("setBomb");
-    if (this.bombsToPlace > 0 && condition) {
-      this.placingBomb = true;
+    // console.log("setBomb");
+    if (this.bombsToPlace < this.maxBombs && condition) {
+      this.isBombPlaced = true;
       this.bombPosX = this.centreX;
       this.bombPosY = this.centreY;
-      --this.bombsToPlace;
+      ++this.bombsToPlace;
     } else {
-      this.placingBomb = false;
+      this.isBombPlaced = false;
     }
   };
 }

@@ -17,7 +17,6 @@ class Game extends CanvasGame {
     this.generateBorder();
     this.generateObjectsOnCanvas();
 
-    this.isBombShocking = false;
     this.arrReturn = [];
 
     document.getElementById("btnReset").onclick = this.restartTheGame;
@@ -25,6 +24,19 @@ class Game extends CanvasGame {
   }
 
   collisionDetection() {
+    // plane.map((posX, indexX) => {
+    //   posX.map((posY, indexY) => {
+    //     if (plane[indexX][indexY] == 3) {
+    //       if (
+    //         indexX == gameObjects[PLAYER_NUMBER].getCentreX() &&
+    //         indexY == gameObjects[PLAYER_NUMBER].getCentreY()
+    //       ) {
+    //         console.log("lose a point of health");
+    //       }
+    //     }
+    //   });
+    // });
+
     if (isGameOver) return;
   }
 
@@ -66,24 +78,23 @@ class Game extends CanvasGame {
   };
 
   placeABomb = () => {
-    console.log("placeABomb");
+    gameObjects[PLAYER_NUMBER].decreaseBombsToPlace();
     let posBombX = gameObjects[PLAYER_NUMBER].getBombPosX();
     let posBombY = gameObjects[PLAYER_NUMBER].getBombPosY();
     console.log(posBombX + " " + posBombY);
     plane[posBombX][posBombY] = 4;
-    // ctx.drawImage(tileBomb, posBombX*squareSizeX, posBombY*squareSizeY, squareSizeX, squareSizeY);
-    // ctx.drawImage(tileBomb, 10 * 50, 10 * 50, squareSizeX, squareSizeY);
+
     setTimeout(() => {
       this.detonateABomb(posBombX, posBombY);
-    }, 500);
-    gameObjects[PLAYER_NUMBER].setBomb(false);
+    }, 600);
+
+    // gameObjects[PLAYER_NUMBER].setBomb(false);
   };
 
   // TODO fix this
 
   detonateABomb = (posX, posY) => {
-    console.log("detonateABomb");
-    this.isBombShocking = true;
+    // console.log("detonateABomb");
 
     const bombRadius = 3;
     let topColided = false,
@@ -131,39 +142,29 @@ class Game extends CanvasGame {
       }
     }
 
-    console.log(this.arrReturn);
-    // console.log(plane);
-    this.bombRecovering(posX, posY);
+    this.bombRecovering();
   };
 
   // TODO
-  bombRecovering = (posX, posY) => {
-    setTimeout(() => {
-      gameObjects[PLAYER_NUMBER].recoverBomb();
-
-      const bombRadius = 3;
-      // for (let i = 0; i < bombRadius; i++) {
-      //   plane[posX + i][posY] = 0;
-      //   plane[posX - i][posY] = 0;
-      //   plane[posX][posY + i] = 0;
-      //   plane[posX][posY - i] = 0;
-      // }
-
-      for (let i = 0; i < this.arrReturn.length; i++) {
-        plane[this.arrReturn[i].x][this.arrReturn[i].y] = 0;
-      }
-      console.log(plane);
-      this.isBombShocking = false;
-    }, 100);
+  bombRecovering = () => {
+    // setTimeout(() => {
+    //   // gameObjects[PLAYER_NUMBER].recoverBomb();
+    //   for (let i = 0; i < this.arrReturn.length; i++) {
+    //     plane[this.arrReturn[i].x][this.arrReturn[i].y] = 0;
+    //   }
+    //   // console.log("arrReturn" + this.arrReturn.length);
+    //   // console.log(plane);
+    // }, 100);
   };
 
   // TODO fix this
   isBombRadiusGoingThroughAWall = (posX, posY) => {};
 
-  // TODO fix this
   displayGeneralInfo = () => {
     gameObjects[INFO_BOMBS] = new StaticText(
-      "Bombs: fix this",
+      "Bombs: " +
+        (gameObjects[PLAYER_NUMBER].getMaxBombs() -
+          gameObjects[PLAYER_NUMBER].getBombsToPlace()),
       3 * squareSizeX,
       (squareSizeY * 5) / 6,
       "Times Roman",
@@ -185,12 +186,11 @@ class Game extends CanvasGame {
 
   // TODO fix this
   checkBombRadiusCollisionWithCharacter = (posX, posY) => {
-    this.isBombShocking &&
-      !this.isBombRadiusGoingThroughAWall(posX, posY) &&
-      this.decreaseCharacterLifes();
+    this.decreaseCharacterLifes();
   };
 
   renderPlane = () => {
+    // console.log("renderPlane");
     plane.map((posX, indexX) => {
       posX.map((posY, indexY) => {
         switch (posY) {
@@ -212,15 +212,20 @@ class Game extends CanvasGame {
               squareSizeX,
               squareSizeY
             );
-
             this.displayGeneralInfo();
-
             break;
           case 2:
             gameObjects[PLAYER_NUMBER].drawCharacter();
             break;
           case 3:
-            console.log("case 3");
+            // console.log("case 3");
+
+            if (
+              gameObjects[PLAYER_NUMBER].getCentreX() == indexX &&
+              gameObjects[PLAYER_NUMBER].getCentreY() == indexY
+            ) {
+              console.log("lose a point of health");
+            }
             // let explo = new Explosion(
             //   explosionImage,
             //   indexX,
@@ -238,6 +243,17 @@ class Game extends CanvasGame {
             );
             gameObjects[ind].start();
 
+            // if (
+            //   !gameObjects[ind].isDisplayed() &&
+            //   gameObjects[PLAYER_NUMBER].getCentreX() == indexX &&
+            //   gameObjects[PLAYER_NUMBER].getCentreY() == indexY
+            // ) {
+            //   console.log("killed");
+            // }
+            // setTimeout(() => {
+            // plane[indexX][indexY] = 0;
+            // }, 1000);
+            this.clearPlane(indexX, indexY);
             break;
           case 4:
             ctx.drawImage(
@@ -251,6 +267,12 @@ class Game extends CanvasGame {
         }
       });
     });
+  };
+
+  clearPlane = (posX, posY) => {
+    setTimeout(() => {
+      plane[posX][posY] = 0;
+    }, 1000);
   };
 
   decreaseCharacterLifes = () => {
@@ -300,7 +322,7 @@ class Game extends CanvasGame {
       this.displayGeneralInfo();
     }
     if (gameObjects[PLAYER_NUMBER])
-      if (gameObjects[PLAYER_NUMBER].getPlacingBomb()) {
+      if (gameObjects[PLAYER_NUMBER].getBombsToPlace() > 0) {
         this.placeABomb();
       }
     super.playGameLoop();

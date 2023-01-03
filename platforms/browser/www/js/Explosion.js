@@ -12,6 +12,8 @@ class Explosion extends GameObject {
     ); /* as this class extends from GameObject, you must always call super() */
 
     /* These variables depend on the object */
+
+    // this.startTime = Date.now();
     this.explosionImage = explosionImage;
 
     this.centreX = centreX;
@@ -34,8 +36,14 @@ class Explosion extends GameObject {
   }
 
   updateState() {
-    if (this.currentGameObject >= this.NUMBER_OF_SPRITES) this.stopAndHide();
-    if (this.row > 5) this.stopAndHide();
+    // if (this.currentGameObject >= this.NUMBER_OF_SPRITES) this.stopAndHide();
+    if (this.row > 6) {
+      this.stopAndHide();
+
+      // const end = Date.now();
+
+      // console.log(`Execution time: ${end - this.startTime} ms`);
+    }
 
     this.column++;
     if (this.column >= this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE) {
@@ -45,16 +53,16 @@ class Explosion extends GameObject {
   }
 
   render() {
-    console.log(
-      "explosionRender",
-      this.centreX +
-        "\t" +
-        this.centreY +
-        "\t" +
-        squareSizeX +
-        "\t" +
-        squareSizeY
-    );
+    // console.log(
+    //   // "explosionRender",
+    //   this.centreX +
+    //     "\t" +
+    //     this.centreY +
+    //     "\t" +
+    //     squareSizeX +
+    //     "\t" +
+    //     squareSizeY
+    // );
     ctx.drawImage(
       this.explosionImage,
       this.column * this.SPRITE_WIDTH,

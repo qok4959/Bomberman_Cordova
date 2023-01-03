@@ -49,7 +49,7 @@ let TILE_SIZE;
 let squareSizeX;
 let squareSizeY;
 
-let characterLifes = 1;
+let characterLifes = 3;
 let botLifes = 1;
 let Character_WIDTH;
 let isGameOver = false;
@@ -125,23 +125,35 @@ function playGame() {
     if (isGameOver || moved) return;
     if (e.keyCode === 37) {
       // left
+      moved = true;
       gameObjects[PLAYER_NUMBER].setDirection(LEFT);
     } else if (e.keyCode === 38) {
       // up
+      moved = true;
       gameObjects[PLAYER_NUMBER].setDirection(UP);
     } else if (e.keyCode === 39) {
       // right
+      moved = true;
       gameObjects[PLAYER_NUMBER].setDirection(RIGHT);
     } else if (e.keyCode === 40) {
       // down
+      moved = true;
       gameObjects[PLAYER_NUMBER].setDirection(DOWN);
-    } else if (e.keyCode === 32) {
-      // down
-      gameObjects[PLAYER_NUMBER].setBomb(true);
     }
-    moved = true;
+
+    //moving timeout
     setTimeout(() => {
       moved = false;
     }, 100);
+  });
+
+  // bomb placement must be the separated event
+  document.addEventListener("keydown", function (e) {
+    if (isGameOver) return;
+
+    if (e.keyCode === 32) {
+      // space
+      gameObjects[PLAYER_NUMBER].setBomb(true);
+    }
   });
 }
