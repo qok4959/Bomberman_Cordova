@@ -18,6 +18,7 @@ class Game extends CanvasGame {
     this.generateObjectsOnCanvas();
 
     this.isBombShocking = false;
+    this.arrReturn = [];
 
     document.getElementById("btnReset").onclick = this.restartTheGame;
     //canvas offscreen backup
@@ -68,14 +69,10 @@ class Game extends CanvasGame {
     console.log("placeABomb");
     let posBombX = gameObjects[PLAYER_NUMBER].getBombPosX();
     let posBombY = gameObjects[PLAYER_NUMBER].getBombPosY();
+    console.log(posBombX + " " + posBombY);
     plane[posBombX][posBombY] = 4;
-    ctx.drawImage(
-      tileBomb,
-      posBombX * squareSizeX,
-      posBombY * squareSizeY,
-      squareSizeX,
-      squareSizeY
-    );
+    // ctx.drawImage(tileBomb, posBombX*squareSizeX, posBombY*squareSizeY, squareSizeX, squareSizeY);
+    // ctx.drawImage(tileBomb, 10 * 50, 10 * 50, squareSizeX, squareSizeY);
     setTimeout(() => {
       this.detonateABomb(posBombX, posBombY);
     }, 1000);
@@ -89,27 +86,53 @@ class Game extends CanvasGame {
 
     const bombRadius = 3;
     for (let i = 0; i < bombRadius; i++) {
-      plane[posX + i][posY] = 3;
-      plane[posX - i][posY] = 3;
-      plane[posX][posY + i] = 3;
-      plane[posX][posY - i] = 3;
+      let topColided = false,
+        leftColided = false,
+        bottomColided = false,
+        rightColided = false;
+
+      if (plane[posX + i][posY] != 1 && !rightColided) {
+        this.arrReturn.push({ x: posX + 1, y: posY });
+        plane[posX + i][posY] = 3;
+      } else rightColided = true;
+
+      if (plane[posX - i][posY] != 1 && !leftColided) {
+        this.arrReturn.push({ x: posX - 1, y: posY });
+        plane[posX - i][posY] = 3;
+      } else leftColided = true;
+
+      if (plane[posX][posY + i] != 1 && !topColided) {
+        plane[posX][posY + i] = 3;
+        this.arrReturn.push({ x: posX, y: posY + i });
+      } else topColided = true;
+
+      if (plane[posX][posY - i] != 1 && !bottomColided) {
+        this.arrReturn.push({ x: posX, y: posY - i });
+        plane[posX][posY - i] = 3;
+      } else bottomColided = true;
     }
 
+    console.log(plane);
     this.bombRecovering(posX, posY);
   };
 
-  //@TODO
+  // TODO
   bombRecovering = (posX, posY) => {
     setTimeout(() => {
       gameObjects[PLAYER_NUMBER].recoverBomb();
 
       const bombRadius = 3;
-      for (let i = 0; i < bombRadius; i++) {
-        plane[posX + i][posY] = 0;
-        plane[posX - i][posY] = 0;
-        plane[posX][posY + i] = 0;
-        plane[posX][posY - i] = 0;
+      // for (let i = 0; i < bombRadius; i++) {
+      //   plane[posX + i][posY] = 0;
+      //   plane[posX - i][posY] = 0;
+      //   plane[posX][posY + i] = 0;
+      //   plane[posX][posY - i] = 0;
+      // }
+
+      for (let i = 0; i < this.arrReturn.length; i++) {
+        plane[arrReturn[0].x][arrReturn[0].y] = 0;
       }
+      console.log(plane);
       this.isBombShocking = false;
     }, 1000);
   };
@@ -193,7 +216,13 @@ class Game extends CanvasGame {
 
             break;
           case 4:
-            ctx.drawImage(tileBomb, indexX, indexY, squareSizeX, squareSizeY);
+            ctx.drawImage(
+              tileBomb,
+              indexX * squareSizeX,
+              indexY * squareSizeY,
+              squareSizeX,
+              squareSizeY
+            );
             break;
         }
       });
