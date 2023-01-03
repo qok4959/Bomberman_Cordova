@@ -75,44 +75,64 @@ class Game extends CanvasGame {
     // ctx.drawImage(tileBomb, 10 * 50, 10 * 50, squareSizeX, squareSizeY);
     setTimeout(() => {
       this.detonateABomb(posBombX, posBombY);
-    }, 1000);
+    }, 500);
     gameObjects[PLAYER_NUMBER].setBomb(false);
   };
 
   // TODO fix this
+
   detonateABomb = (posX, posY) => {
     console.log("detonateABomb");
     this.isBombShocking = true;
 
     const bombRadius = 3;
+    let topColided = false,
+      leftColided = false,
+      bottomColided = false,
+      rightColided = false;
     for (let i = 0; i < bombRadius; i++) {
-      let topColided = false,
-        leftColided = false,
-        bottomColided = false,
-        rightColided = false;
-
-      if (plane[posX + i][posY] != 1 && !rightColided) {
-        this.arrReturn.push({ x: posX + 1, y: posY });
+      //middle
+      if (i == 0) {
         plane[posX + i][posY] = 3;
-      } else rightColided = true;
+        this.arrReturn.push({ x: posX, y: posY });
+        continue;
+      }
 
-      if (plane[posX - i][posY] != 1 && !leftColided) {
-        this.arrReturn.push({ x: posX - 1, y: posY });
-        plane[posX - i][posY] = 3;
-      } else leftColided = true;
+      //right
+      if (posX + i < this.widthOfAPlane) {
+        if (plane[posX + i][posY] != 1 && !rightColided) {
+          this.arrReturn.push({ x: posX + i, y: posY });
+          plane[posX + i][posY] = 3;
+        } else rightColided = true;
+      }
 
-      if (plane[posX][posY + i] != 1 && !topColided) {
-        plane[posX][posY + i] = 3;
-        this.arrReturn.push({ x: posX, y: posY + i });
-      } else topColided = true;
+      //left
+      if (posX - i >= 0) {
+        if (plane[posX - i][posY] != 1 && !leftColided) {
+          this.arrReturn.push({ x: posX - i, y: posY });
+          plane[posX - i][posY] = 3;
+        } else leftColided = true;
+      }
 
-      if (plane[posX][posY - i] != 1 && !bottomColided) {
-        this.arrReturn.push({ x: posX, y: posY - i });
-        plane[posX][posY - i] = 3;
-      } else bottomColided = true;
+      //top
+      if (posY + i < this.widthOfAPlane) {
+        if (plane[posX][posY + i] != 1 && !topColided) {
+          plane[posX][posY + i] = 3;
+          this.arrReturn.push({ x: posX, y: posY + i });
+        } else topColided = true;
+      }
+
+      //bottom
+      if (posY - i >= 0) {
+        if (plane[posX][posY - i] != 1 && !bottomColided) {
+          this.arrReturn.push({ x: posX, y: posY - i });
+          plane[posX][posY - i] = 3;
+        } else bottomColided = true;
+      }
     }
 
-    console.log(plane);
+    console.log(this.arrReturn);
+    // console.log(plane);
     this.bombRecovering(posX, posY);
   };
 
@@ -130,11 +150,11 @@ class Game extends CanvasGame {
       // }
 
       for (let i = 0; i < this.arrReturn.length; i++) {
-        plane[arrReturn[0].x][arrReturn[0].y] = 0;
+        plane[this.arrReturn[i].x][this.arrReturn[i].y] = 0;
       }
       console.log(plane);
       this.isBombShocking = false;
-    }, 1000);
+    }, 100);
   };
 
   // TODO fix this
@@ -142,22 +162,25 @@ class Game extends CanvasGame {
 
   // TODO fix this
   displayGeneralInfo = () => {
-    // gameObjects[INFO_BOMBS] = new StaticText(
-    //   "Bombs: fix this",
-    //   this.tileSize,
-    //   this.tileSize * 0.9,
-    //   "Times Roman",
-    //   this.tileSize,
-    //   "red"
-    // );
-    // gameObjects[INFO_LIFES] = new StaticText(
-    //   "Lifes: " + characterLifes,
-    //   (canvas.width / this.tileSize - 4) * this.tileSize,
-    //   this.tileSize * 0.9,
-    //   "Times Roman",
-    //   this.tileSize,
-    //   "red"
-    // );
+    gameObjects[INFO_BOMBS] = new StaticText(
+      "Bombs: fix this",
+      3 * squareSizeX,
+      (squareSizeY * 5) / 6,
+      "Times Roman",
+      squareSizeY,
+      "red"
+    );
+    gameObjects[INFO_LIFES] = new StaticText(
+      "Lifes: " + characterLifes,
+      this.widthOfAPlane * squareSizeX - 3 * squareSizeX,
+      (squareSizeY * 5) / 6,
+      "Times Roman",
+      squareSizeY,
+      "red"
+    );
+
+    gameObjects[INFO_BOMBS].drawTxt();
+    gameObjects[INFO_LIFES].drawTxt();
   };
 
   // TODO fix this
@@ -190,9 +213,11 @@ class Game extends CanvasGame {
               squareSizeY
             );
 
+            this.displayGeneralInfo();
+
             break;
           case 2:
-            gameObjects[PLAYER_NUMBER].drawCharacter(indexX, indexY);
+            gameObjects[PLAYER_NUMBER].drawCharacter();
             break;
           case 3:
             console.log("case 3");
@@ -209,8 +234,7 @@ class Game extends CanvasGame {
               indexX,
               indexY,
               squareSizeX,
-              squareSizeY,
-              10
+              squareSizeY
             );
             gameObjects[ind].start();
 

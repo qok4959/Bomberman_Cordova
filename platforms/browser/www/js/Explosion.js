@@ -7,7 +7,7 @@ class Explosion extends GameObject {
 
   constructor(explosionImage, centreX, centreY, sizeX, sizeY, delay = 0) {
     super(
-      30,
+      40,
       delay
     ); /* as this class extends from GameObject, you must always call super() */
 
@@ -22,12 +22,10 @@ class Explosion extends GameObject {
     this.NUMBER_OF_SPRITES = 25; // the number of gameObjects in the gameObject image
     this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE = 5; // the number of columns in the gameObject image
     this.NUMBER_OF_ROWS_IN_SPRITE_IMAGE = 5; // the number of rows in the gameObject image
-    this.START_ROW = 0;
-    this.START_COLUMN = 0;
 
     this.currentgameObject = 0; // the current gameObject to be displayed from the gameObject image
-    this.row = this.START_ROW; // current row in gameObject image
-    this.column = this.START_COLUMN; // current column in gameObject image
+    this.row = 1; // current row in gameObject image
+    this.column = 0; // current column in gameObject image
 
     this.SPRITE_WIDTH =
       this.explosionImage.width / this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE;
@@ -36,8 +34,7 @@ class Explosion extends GameObject {
   }
 
   updateState() {
-    this.currentgameObject++;
-
+    if (this.currentGameObject >= this.NUMBER_OF_SPRITES) this.stopAndHide();
     if (this.row > 5) this.stopAndHide();
 
     this.column++;
