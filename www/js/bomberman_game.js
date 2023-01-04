@@ -87,6 +87,12 @@ function playGame() {
 
   //image, posX, posY, speed
   gameObjects[PLAYER_NUMBER] = new Character(CharacterImage, 3, 3, 1);
+  gameObjects[BOT_NUMBER] = new Character(
+    CharacterImage,
+    CHARACTER_SCALE - 4,
+    CHARACTER_SCALE - 4,
+    1
+  );
 
   /* END OF player specific code. */
 

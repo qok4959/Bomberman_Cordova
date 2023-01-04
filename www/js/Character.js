@@ -145,3 +145,4 @@ class Character extends GameObject {
     }
   };
 }
+BOT_NUMBER

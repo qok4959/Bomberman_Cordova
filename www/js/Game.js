@@ -21,7 +21,6 @@ class Game extends CanvasGame {
     this.arrReturn = [];
 
     document.getElementById("btnReset").onclick = this.restartTheGame;
-    //canvas offscreen backup
   }
 
   clearPlane = () => {};
@@ -36,15 +35,15 @@ class Game extends CanvasGame {
             indexY == gameObjects[PLAYER_NUMBER].getCentreY()
           ) {
             console.log("lose a point of health");
-            this.decreaseCharacterLifes();
+            this.decreaseCharacterLifes(PLAYER_NUMBER);
           }
         }
       });
     });
     // console.log(
-    //   gameObjects[PLAYER_NUMBER].getCentreX() +
+    //   gameObjects[CHARACTER_NUMBER].getCentreX() +
     //     " " +
-    //     gameObjects[PLAYER_NUMBER].getCentreY()
+    //     gameObjects[CHARACTER_NUMBER].getCentreY()
     // );
 
     if (isGameOver) return;
@@ -73,7 +72,14 @@ class Game extends CanvasGame {
   generateObjectsOnCanvas = () => {
     for (let i = 0; i < plane.length; i += 1) {
       for (let j = 0; j < plane[i].length; j += 1) {
-        if (i < 4 && j < 4 && j > 0 && i > 0) plane[i][j] = 0;
+        if (
+          (i == 3 && j == 3) ||
+          (i == CHARACTER_SCALE - 4 && j == CHARACTER_SCALE - 4)
+        ) {
+          plane[i][j] = 0;
+          continue;
+        }
+
         if (Math.random() * 10 > 9) {
           plane[i][j] = 1;
         }
@@ -81,6 +87,7 @@ class Game extends CanvasGame {
     }
 
     plane[0][0] = 2;
+    plane[CHARACTER_SCALE - 1][CHARACTER_SCALE - 1] = 5;
 
     plane.map((x) => {
       backupPlane.push([...x]);
@@ -88,10 +95,10 @@ class Game extends CanvasGame {
     this.everythingIsGenerated = true;
   };
 
-  placeABomb = () => {
-    gameObjects[PLAYER_NUMBER].decreaseAvailableBombsCount();
-    let posBombX = gameObjects[PLAYER_NUMBER].getBombPosX();
-    let posBombY = gameObjects[PLAYER_NUMBER].getBombPosY();
+  placeABomb = (CHARACTER_NUMBER) => {
+    gameObjects[CHARACTER_NUMBER].decreaseAvailableBombsCount();
+    let posBombX = gameObjects[CHARACTER_NUMBER].getBombPosX();
+    let posBombY = gameObjects[CHARACTER_NUMBER].getBombPosY();
 
     console.log(posBombX + " " + posBombY);
     plane[posBombX][posBombY] = 4;
@@ -100,7 +107,7 @@ class Game extends CanvasGame {
       this.detonateABomb(posBombX, posBombY);
     }, 600);
 
-    // gameObjects[PLAYER_NUMBER].setBomb(false);
+    // gameObjects[CHARACTER_NUMBER].setBomb(false);
   };
 
   // TODO fix this
@@ -159,26 +166,25 @@ class Game extends CanvasGame {
     });
   };
 
-  displayGeneralInfo = () => {
-    gameObjects[INFO_BOMBS] = new StaticText(
-      "Bombs: " + gameObjects[PLAYER_NUMBER].getBombsInfoCount(),
-      3 * squareSizeX,
-      (squareSizeY * 5) / 6,
-      "Times Roman",
-      squareSizeY,
-      "#7FFF00"
-    );
-    gameObjects[INFO_LIFES] = new StaticText(
-      "Lifes: " + characterLifes,
-      this.widthOfAPlane * squareSizeX - 3 * squareSizeX,
-      (squareSizeY * 5) / 6,
-      "Times Roman",
-      squareSizeY,
-      "#7FFF00"
-    );
-
-    gameObjects[INFO_BOMBS].drawTxt();
-    gameObjects[INFO_LIFES].drawTxt();
+  displayGeneralInfo = (CHARACTER_NUMBER) => {
+    // gameObjects[INFO_BOMBS] = new StaticText(
+    //   "Bombs: " + gameObjects[CHARACTER_NUMBER].getBombsInfoCount(),
+    //   3 * squareSizeX,
+    //   (squareSizeY * 5) / 6,
+    //   "Times Roman",
+    //   squareSizeY,
+    //   "#7FFF00"
+    // );
+    // gameObjects[INFO_LIFES] = new StaticText(
+    //   "Lifes: " + characterLifes,
+    //   this.widthOfAPlane * squareSizeX - 3 * squareSizeX,
+    //   (squareSizeY * 5) / 6,
+    //   "Times Roman",
+    //   squareSizeY,
+    //   "#7FFF00"
+    // );
+    // gameObjects[INFO_BOMBS].drawTxt();
+    // gameObjects[INFO_LIFES].drawTxt();
   };
 
   renderPlane = () => {
@@ -229,11 +235,21 @@ class Game extends CanvasGame {
 
             this.clearPlane(indexX, indexY);
 
-            !this.isTempArrClearExecuted && this.tempArrClear();
+            !this.isTempArrClearExecuted && this.tempArrClear(PLAYER_NUMBER);
             break;
           case 4:
             ctx.drawImage(
               tileBomb,
+              indexX * squareSizeX,
+              indexY * squareSizeY,
+              squareSizeX,
+              squareSizeY
+            );
+            break;
+          case 5:
+            gameObjects[BOT_NUMBER].drawCharacter();
+            ctx.drawImage(
+              tileObstacle,
               indexX * squareSizeX,
               indexY * squareSizeY,
               squareSizeX,
@@ -249,20 +265,20 @@ class Game extends CanvasGame {
     plane[posX][posY] = 0;
   };
 
-  tempArrClear = () => {
+  tempArrClear = (CHARACTER_NUMBER) => {
     this.isTempArrClearExecuted = true;
     setTimeout(() => {
       tempArr = [];
 
       this.isTempArrClearExecuted = false;
-      gameObjects[PLAYER_NUMBER].increaseBombsInfoCount();
+      gameObjects[CHARACTER_NUMBER].increaseBombsInfoCount();
     }, 700);
   };
 
-  decreaseCharacterLifes = () => {
+  decreaseCharacterLifes = (CHARACTER_NUMBER) => {
     if (characterLifes > 1) {
-      gameObjects[PLAYER_NUMBER].centreX = 3;
-      gameObjects[PLAYER_NUMBER].centreY = 3;
+      gameObjects[CHARACTER_NUMBER].centreX = 3;
+      gameObjects[CHARACTER_NUMBER].centreY = 3;
       --characterLifes;
     } else {
       characterLifes > 0 && --characterLifes;
@@ -280,12 +296,12 @@ class Game extends CanvasGame {
     }
   };
 
-  restartTheGame = () => {
+  restartTheGame = (CHARACTER_NUMBER, BOT_NUMBER) => {
     console.log("restarting!");
     isGameOver = false;
     characterLifes = 3;
 
-    // gameObjects[this.PLAYER_NUMBER].start();
+    // gameObjects[this.CHARACTER_NUMBER].start();
 
     document.getElementById("btnReset").style.visibility = "hidden";
 
@@ -294,17 +310,20 @@ class Game extends CanvasGame {
       plane.push([...x]);
     });
 
-    gameObjects[PLAYER_NUMBER].centreX = 3;
-    gameObjects[PLAYER_NUMBER].centreY = 3;
+    gameObjects[CHARACTER_NUMBER].centreX = 3;
+    gameObjects[CHARACTER_NUMBER].centreY = 3;
+
+    gameObjects[BOT_NUMBER].centreX = CHARACTER_SCALE - 4;
+    gameObjects[BOT_NUMBER].centreY = CHARACTER_SCALE - 4;
   };
 
   playGameLoop() {
     if (this.displayGeneralInfo && this.everythingIsGenerated) {
-      this.displayGeneralInfo();
+      this.displayGeneralInfo(PLAYER_NUMBER);
     }
     if (gameObjects[PLAYER_NUMBER])
       if (gameObjects[PLAYER_NUMBER].getAvailableBombs() > 0) {
-        this.placeABomb();
+        this.placeABomb(PLAYER_NUMBER);
       }
     super.playGameLoop();
   }
