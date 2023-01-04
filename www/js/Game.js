@@ -7,7 +7,7 @@ class Game extends CanvasGame {
   constructor() {
     super();
     this.widthOfAPlane = CHARACTER_SCALE;
-    this.PLAYER_NUMBER = 2;
+
     /* this.mazeCtx will be used for collision detection */
 
     // squareSizeX = canvas.width / this.widthOfAPlane;
@@ -17,25 +17,35 @@ class Game extends CanvasGame {
     this.generateBorder();
     this.generateObjectsOnCanvas();
 
+    this.isTempArrClearExecuted = false;
     this.arrReturn = [];
 
     document.getElementById("btnReset").onclick = this.restartTheGame;
     //canvas offscreen backup
   }
 
+  clearPlane = () => {};
+
   collisionDetection() {
-    // plane.map((posX, indexX) => {
-    //   posX.map((posY, indexY) => {
-    //     if (plane[indexX][indexY] == 3) {
-    //       if (
-    //         indexX == gameObjects[PLAYER_NUMBER].getCentreX() &&
-    //         indexY == gameObjects[PLAYER_NUMBER].getCentreY()
-    //       ) {
-    //         console.log("lose a point of health");
-    //       }
-    //     }
-    //   });
-    // });
+    // for
+    tempArr.map((posX, indexX) => {
+      posX.map((posY, indexY) => {
+        if (tempArr[indexX][indexY] == 3) {
+          if (
+            indexX == gameObjects[PLAYER_NUMBER].getCentreX() &&
+            indexY == gameObjects[PLAYER_NUMBER].getCentreY()
+          ) {
+            console.log("lose a point of health");
+            this.decreaseCharacterLifes();
+          }
+        }
+      });
+    });
+    // console.log(
+    //   gameObjects[PLAYER_NUMBER].getCentreX() +
+    //     " " +
+    //     gameObjects[PLAYER_NUMBER].getCentreY()
+    // );
 
     if (isGameOver) return;
   }
@@ -63,24 +73,29 @@ class Game extends CanvasGame {
   generateObjectsOnCanvas = () => {
     for (let i = 0; i < plane.length; i += 1) {
       for (let j = 0; j < plane[i].length; j += 1) {
+        if (i < 4 && j < 4 && j > 0 && i > 0) plane[i][j] = 0;
         if (Math.random() * 10 > 9) {
           plane[i][j] = 1;
         }
       }
     }
 
-    plane[3][3] = 2;
+    plane[0][0] = 2;
 
     gameObjects[PLAYER_NUMBER].setCentreX(3);
     gameObjects[PLAYER_NUMBER].setCentreY(3);
+
+    plane.map((x) => {
+      backupPlane.push([...x]);
+    });
     this.everythingIsGenerated = true;
-    console.log(plane);
   };
 
   placeABomb = () => {
-    gameObjects[PLAYER_NUMBER].decreaseBombsToPlace();
+    gameObjects[PLAYER_NUMBER].decreaseAvailableBombsCount();
     let posBombX = gameObjects[PLAYER_NUMBER].getBombPosX();
     let posBombY = gameObjects[PLAYER_NUMBER].getBombPosY();
+
     console.log(posBombX + " " + posBombY);
     plane[posBombX][posBombY] = 4;
 
@@ -142,29 +157,14 @@ class Game extends CanvasGame {
       }
     }
 
-    this.bombRecovering();
+    plane.map((x) => {
+      tempArr.push([...x]);
+    });
   };
-
-  // TODO
-  bombRecovering = () => {
-    // setTimeout(() => {
-    //   // gameObjects[PLAYER_NUMBER].recoverBomb();
-    //   for (let i = 0; i < this.arrReturn.length; i++) {
-    //     plane[this.arrReturn[i].x][this.arrReturn[i].y] = 0;
-    //   }
-    //   // console.log("arrReturn" + this.arrReturn.length);
-    //   // console.log(plane);
-    // }, 100);
-  };
-
-  // TODO fix this
-  isBombRadiusGoingThroughAWall = (posX, posY) => {};
 
   displayGeneralInfo = () => {
     gameObjects[INFO_BOMBS] = new StaticText(
-      "Bombs: " +
-        (gameObjects[PLAYER_NUMBER].getMaxBombs() -
-          gameObjects[PLAYER_NUMBER].getBombsToPlace()),
+      "Bombs: " + gameObjects[PLAYER_NUMBER].getBombsInfoCount(),
       3 * squareSizeX,
       (squareSizeY * 5) / 6,
       "Times Roman",
@@ -182,11 +182,6 @@ class Game extends CanvasGame {
 
     gameObjects[INFO_BOMBS].drawTxt();
     gameObjects[INFO_LIFES].drawTxt();
-  };
-
-  // TODO fix this
-  checkBombRadiusCollisionWithCharacter = (posX, posY) => {
-    this.decreaseCharacterLifes();
   };
 
   renderPlane = () => {
@@ -216,16 +211,17 @@ class Game extends CanvasGame {
             break;
           case 2:
             gameObjects[PLAYER_NUMBER].drawCharacter();
+            ctx.drawImage(
+              tileObstacle,
+              indexX * squareSizeX,
+              indexY * squareSizeY,
+              squareSizeX,
+              squareSizeY
+            );
             break;
           case 3:
             // console.log("case 3");
 
-            if (
-              gameObjects[PLAYER_NUMBER].getCentreX() == indexX &&
-              gameObjects[PLAYER_NUMBER].getCentreY() == indexY
-            ) {
-              console.log("lose a point of health");
-            }
             // let explo = new Explosion(
             //   explosionImage,
             //   indexX,
@@ -233,7 +229,8 @@ class Game extends CanvasGame {
             //   squareSizeX,
             //   squareSizeY
             // );
-            let ind = indexX * indexY;
+
+            let ind = Math.floor(Math.random() * (99999 - 10) + 10);
             gameObjects[ind] = new Explosion(
               explosionImage,
               indexX,
@@ -253,7 +250,10 @@ class Game extends CanvasGame {
             // setTimeout(() => {
             // plane[indexX][indexY] = 0;
             // }, 1000);
+
             this.clearPlane(indexX, indexY);
+
+            !this.isTempArrClearExecuted && this.tempArrClear();
             break;
           case 4:
             ctx.drawImage(
@@ -270,27 +270,35 @@ class Game extends CanvasGame {
   };
 
   clearPlane = (posX, posY) => {
+    plane[posX][posY] = 0;
+  };
+
+  tempArrClear = () => {
+    this.isTempArrClearExecuted = true;
     setTimeout(() => {
-      plane[posX][posY] = 0;
-    }, 1000);
+      tempArr = [];
+
+      this.isTempArrClearExecuted = false;
+      gameObjects[PLAYER_NUMBER].increaseBombsInfoCount();
+    }, 700);
   };
 
   decreaseCharacterLifes = () => {
     if (characterLifes > 1) {
-      gameObjects[this.PLAYER_NUMBER].centreX = this.tileSize * 2;
-      gameObjects[this.PLAYER_NUMBER].centreY = this.tileSize * 2;
+      gameObjects[PLAYER_NUMBER].centreX = 3;
+      gameObjects[PLAYER_NUMBER].centreY = 3;
       --characterLifes;
     } else {
-      --characterLifes;
+      characterLifes > 0 && --characterLifes;
       isGameOver = true;
       /* Player has lost */
-      for (
-        let i = 0;
-        i < gameObjects.length;
-        i++ /* stop all gameObjects from animating */
-      ) {
-        gameObjects[i].stop();
-      }
+      // for (
+      //   let i = 0;
+      //   i < gameObjects.length;
+      //   i++ /* stop all gameObjects from animating */
+      // ) {
+      //   gameObjects[i].stop();
+      // }
       gameObjects[WIN_MESSAGE] = new StaticText(
         "Game over!",
         canvas.width / 2 - 3 * this.tileSize,
@@ -309,12 +317,17 @@ class Game extends CanvasGame {
     isGameOver = false;
     characterLifes = 1;
 
-    gameObjects[this.PLAYER_NUMBER].start();
+    // gameObjects[this.PLAYER_NUMBER].start();
 
     document.getElementById("btnReset").style.visibility = "hidden";
 
-    gameObjects[this.PLAYER_NUMBER].centreX = this.tileSize * 2;
-    gameObjects[this.PLAYER_NUMBER].centreY = this.tileSize * 2;
+    plane = [];
+    backupPlane.map((x) => {
+      plane.push([...x]);
+    });
+
+    gameObjects[PLAYER_NUMBER].centreX = 3;
+    gameObjects[PLAYER_NUMBER].centreY = 3;
   };
 
   playGameLoop() {
@@ -322,7 +335,7 @@ class Game extends CanvasGame {
       this.displayGeneralInfo();
     }
     if (gameObjects[PLAYER_NUMBER])
-      if (gameObjects[PLAYER_NUMBER].getBombsToPlace() > 0) {
+      if (gameObjects[PLAYER_NUMBER].getAvailableBombs() > 0) {
         this.placeABomb();
       }
     super.playGameLoop();

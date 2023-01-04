@@ -24,13 +24,14 @@ class Character extends GameObject {
 
     this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE = 3; // the number of rows and columns in the gameObject
     this.NUMBER_OF_ROWS_IN_SPRITE_IMAGE = 4; // the number of rows and columns in the gameObject
-    this.isBombPlaced = false;
+
     this.column = 0;
     this.animationStartDelay = 0;
     this.CharacterImage = CharacterImage;
 
-    this.maxBombs = 1;
-    this.bombsToPlace = 0;
+    this.bombsLimitCount = 1;
+    this.availableBombs = 0;
+    this.bombsInfoCount = this.bombsLimitCount;
 
     //global variable
     Character_WIDTH = canvas.height / CHARACTER_SCALE;
@@ -47,34 +48,7 @@ class Character extends GameObject {
     this.setDirection(STOPPED);
   }
 
-  updateState() {
-    // if (this.direction === UP) {
-    //   this.centreY -= this.Character_SPEED;
-    // } else if (this.direction === LEFT) {
-    //   this.centreX -= this.Character_SPEED;
-    // } else if (this.direction === DOWN) {
-    //   this.centreY += this.Character_SPEED;
-    // } else if (this.direction === RIGHT) {
-    //   this.centreX += this.Character_SPEED;
-    // }
-    // if (this.direction !== STOPPED) {
-    //   this.column++;
-    //   this.currentgameObject++;
-    //   if (this.currentgameObject >= this.endgameObject) {
-    //     this.row = this.direction;
-    //     this.column = 0;
-    //     this.currentgameObject = this.startgameObject;
-    //   } else if (this.column >= this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE) {
-    //     this.column = 0;
-    //     this.row++;
-    //   }
-    // } // stopped
-    // else {
-    //   // this.column = 0;
-    //   this.row = 2;
-    //   this.currentgameObject = 0;
-    // }
-  }
+  updateState() {}
 
   move = () => {
     if (this.direction === UP) {
@@ -142,9 +116,7 @@ class Character extends GameObject {
     this.move();
   }
 
-  getDirection() {
-    return this.direction;
-  }
+  getDirection = () => this.direction;
 
   setCentreX(val) {
     this.centreX = val;
@@ -154,51 +126,32 @@ class Character extends GameObject {
     this.centreY = val;
   }
 
-  getCentreX() {
-    return this.centreX;
-  }
+  getCentreX = () => this.centreX;
 
-  getCentreY() {
-    return this.centreY;
-  }
+  getCentreY = () => this.centreY;
 
-  getIsBombPlaced = () => {
-    return this.isBombPlaced;
+  getBombPosX = () => this.bombPosX;
+
+  getBombPosY = () => this.bombPosY;
+
+  decreaseAvailableBombsCount = () => {
+    if (this.availableBombs > 0) --this.availableBombs;
   };
 
-  recoverBomb = () => {
-    ++this.maxBombs;
-  };
+  getAvailableBombs = () => this.availableBombs;
 
-  getMaxBombs = () => {
-    return this.maxBombs;
-  };
+  getBombsLimitCount = () => this.bombsLimitCount;
 
-  getBombPosX = () => {
-    return this.bombPosX;
-  };
+  getBombsInfoCount = () => this.bombsInfoCount;
 
-  getBombPosY = () => {
-    return this.bombPosY;
-  };
+  increaseBombsInfoCount = () => ++this.bombsInfoCount;
 
-  getBombsToPlace = () => {
-    return this.bombsToPlace;
-  };
-
-  decreaseBombsToPlace() {
-    this.bombsToPlace > 0 && --this.bombsToPlace;
-  }
-
-  setBomb = (condition) => {
-    // console.log("setBomb");
-    if (this.bombsToPlace < this.maxBombs && condition) {
-      this.isBombPlaced = true;
+  putABomb = () => {
+    if (this.bombsInfoCount > 0) {
       this.bombPosX = this.centreX;
       this.bombPosY = this.centreY;
-      ++this.bombsToPlace;
-    } else {
-      this.isBombPlaced = false;
+      ++this.availableBombs;
+      --this.bombsInfoCount;
     }
   };
 }

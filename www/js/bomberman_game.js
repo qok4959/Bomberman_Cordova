@@ -45,6 +45,7 @@ const PLAYER_BOMB = 10;
 const BOT_BOMB = 11;
 
 let board = [];
+let tempArr = [];
 let TILE_SIZE;
 let squareSizeX;
 let squareSizeY;
@@ -54,6 +55,7 @@ let botLifes = 1;
 let Character_WIDTH;
 let isGameOver = false;
 let plane = [];
+let backupPlane = [];
 let moved = false;
 /******************* END OF Declare player specific data and functions *****************/
 
@@ -113,12 +115,9 @@ function playGame() {
   /* END OF player specific code. */
 
   /* Always create a player that uses the gameObject array */
-  let player = new Game(PLAYER_NUMBER);
-  // let bot = new BotCanvas(BOT_NUMBER);
+  let game = new Game();
 
-  /* Always play the player */
-  player.start();
-  // bot.start();
+  game.start();
 
   /* If they are needed, then include any player-specific mouse and keyboard listners */
   document.addEventListener("keydown", function (e) {
@@ -153,7 +152,7 @@ function playGame() {
 
     if (e.keyCode === 32) {
       // space
-      gameObjects[PLAYER_NUMBER].setBomb(true);
+      gameObjects[PLAYER_NUMBER].putABomb();
     }
   });
 }
