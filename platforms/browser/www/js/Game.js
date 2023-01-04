@@ -166,7 +166,7 @@ class Game extends CanvasGame {
       (squareSizeY * 5) / 6,
       "Times Roman",
       squareSizeY,
-      "red"
+      "#7FFF00"
     );
     gameObjects[INFO_LIFES] = new StaticText(
       "Lifes: " + characterLifes,
@@ -174,7 +174,7 @@ class Game extends CanvasGame {
       (squareSizeY * 5) / 6,
       "Times Roman",
       squareSizeY,
-      "red"
+      "#7FFF00"
     );
 
     gameObjects[INFO_BOMBS].drawTxt();
@@ -275,15 +275,7 @@ class Game extends CanvasGame {
       // ) {
       //   gameObjects[i].stop();
       // }
-      gameObjects[WIN_MESSAGE] = new StaticText(
-        "Game over!",
-        canvas.width / 2 - 3 * this.tileSize,
-        canvas.height / 2,
-        "Times Roman",
-        this.tileSize,
-        "red"
-      );
-      gameObjects[WIN_MESSAGE].start();
+
       document.getElementById("btnReset").style.visibility = "visible";
     }
   };
@@ -291,7 +283,7 @@ class Game extends CanvasGame {
   restartTheGame = () => {
     console.log("restarting!");
     isGameOver = false;
-    characterLifes = 1;
+    characterLifes = 3;
 
     // gameObjects[this.PLAYER_NUMBER].start();
 

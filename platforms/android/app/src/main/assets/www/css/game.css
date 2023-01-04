@@ -23,7 +23,7 @@
 
 #loadingMessage {
   /* the loading message styling usually does not change */
-  position: absolute;
+  /* position: absolute;
   left: 0;
   right: 0;
   margin-left: auto;
@@ -32,7 +32,7 @@
   width: 50vw;
   color: #9d311e;
   z-index: 100;
-  font-size: 20vh;
+  font-size: 20vh; */
 }
 
 #btnReset {
@@ -51,6 +51,11 @@
   visibility: hidden;
 }
 
+#gameCanvas {
+  height: 96vh;
+  width: 95vw;
+  font-size: 20vh;
+}
 @media (orientation: landscape) {
   #gameCanvas {
     height: 96vh;
@@ -59,10 +64,31 @@
   }
 }
 
-@media (orientation: portrait) {
+/* @media (orientation: portrait) {
   #loadingMessage {
     font-size: 5vh;
     top: 0;
     top: 23vh;
+  }
+} */
+
+@media only screen and (orientation: portrait) {
+  #gameCanvas {
+    height: 96vw;
+    width: 95vh;
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    transform: rotate(90deg);
+  }
+}
+@media only screen and (orientation: landscape) {
+  #gameContainer {
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    transform: rotate(0deg);
   }
 }
