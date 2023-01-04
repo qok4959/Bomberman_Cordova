@@ -4,21 +4,15 @@ class Character extends GameObject {
   /* Each gameObject MUST have a constructor() and a render() method.        */
   /* If the object animates, then it must also have an updateState() method. */
 
-  constructor(
-    CharacterImage,
-    centreX,
-    centreY,
-    CharacterWidth,
-    CharacterHeight
-  ) {
+  constructor(CharacterImage, posX, posY, speed) {
     super(
       40
     ); /* as this class extends from GameObject, you must always call super() */
 
     /* These variables depend on the object */
 
-    this.centreX = centreX;
-    this.centreY = centreY;
+    this.centreX = posX;
+    this.centreY = posY;
     this.bombPosX;
     this.bombPosY;
 
@@ -34,17 +28,13 @@ class Character extends GameObject {
     this.bombsInfoCount = this.bombsLimitCount;
 
     //global variable
-    Character_WIDTH = canvas.height / CHARACTER_SCALE;
 
     this.SPRITE_WIDTH =
       this.CharacterImage.width / this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE / 5;
     this.SPRITE_HEIGHT =
       this.CharacterImage.height / this.NUMBER_OF_ROWS_IN_SPRITE_IMAGE / 2;
-    this.WIDTH_OF_Character_ON_CANVAS =
-      CharacterWidth; /* the width and height that the Character will take up on the canvas */
-    this.HEIGHT_OF_Character_ON_CANVAS = CharacterHeight;
 
-    this.Character_SPEED = 2;
+    this.Character_SPEED = speed;
     this.setDirection(STOPPED);
   }
 

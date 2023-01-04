@@ -82,9 +82,6 @@ class Game extends CanvasGame {
 
     plane[0][0] = 2;
 
-    gameObjects[PLAYER_NUMBER].setCentreX(3);
-    gameObjects[PLAYER_NUMBER].setCentreY(3);
-
     plane.map((x) => {
       backupPlane.push([...x]);
     });
@@ -220,16 +217,6 @@ class Game extends CanvasGame {
             );
             break;
           case 3:
-            // console.log("case 3");
-
-            // let explo = new Explosion(
-            //   explosionImage,
-            //   indexX,
-            //   indexY,
-            //   squareSizeX,
-            //   squareSizeY
-            // );
-
             let ind = Math.floor(Math.random() * (99999 - 10) + 10);
             gameObjects[ind] = new Explosion(
               explosionImage,
@@ -239,17 +226,6 @@ class Game extends CanvasGame {
               squareSizeY
             );
             gameObjects[ind].start();
-
-            // if (
-            //    gameObjects[ind].isDisplayed() &&
-            //   gameObjects[PLAYER_NUMBER].getCentreX() == indexX &&
-            //   gameObjects[PLAYER_NUMBER].getCentreY() == indexY
-            // ) {
-            //   console.log("killed");
-            // }
-            // setTimeout(() => {
-            // plane[indexX][indexY] = 0;
-            // }, 1000);
 
             this.clearPlane(indexX, indexY);
 

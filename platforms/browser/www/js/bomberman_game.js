@@ -40,19 +40,17 @@ const INFO_BOMBS = 2;
 const INFO_LIFES = 3;
 const WIN_MESSAGE = 4;
 const BOT_NUMBER = 5;
-const CHARACTER_SCALE = 25;
-const PLAYER_BOMB = 10;
+const CHARACTER_SCALE = 20;
 const BOT_BOMB = 11;
 
 let board = [];
 let tempArr = [];
-let TILE_SIZE;
+
 let squareSizeX;
 let squareSizeY;
 
 let characterLifes = 3;
 let botLifes = 1;
-let Character_WIDTH;
 let isGameOver = false;
 let plane = [];
 let backupPlane = [];
@@ -62,7 +60,6 @@ let moved = false;
 /* Always have a playGame() function                                     */
 /* However, the content of this function will be different for each player */
 function playGame() {
-  TILE_SIZE = canvas.height / (CHARACTER_SCALE - 2);
   if (squareSizeX == undefined) {
     squareSizeX = canvas.width / CHARACTER_SCALE;
   }
@@ -88,29 +85,8 @@ function playGame() {
     canvas.height
   );
 
-  //   gameObjects[MAZE] = new StaticImage(
-  //     mazeGrid,
-  //     0,
-  //     0,
-  //     canvas.width,`
-  //     canvas.height
-  //   );
-
-  gameObjects[PLAYER_NUMBER] = new BombermanCharacter(
-    CharacterImage,
-    canvas.width / 10,
-    canvas.width / 8,
-    canvas.height / CHARACTER_SCALE,
-    canvas.height / CHARACTER_SCALE
-  );
-
-  // gameObjects[BOT_NUMBER] = new BombermanCharacter(
-  //   CharacterImage,
-  //   canvas.width - 2 * TILE_SIZE,
-  //   canvas.height - 2 * TILE_SIZE,
-  //   canvas.height / CHARACTER_SCALE,
-  //   canvas.height / CHARACTER_SCALE
-  // );
+  //image, posX, posY, speed
+  gameObjects[PLAYER_NUMBER] = new Character(CharacterImage, 3, 3, 1);
 
   /* END OF player specific code. */
 

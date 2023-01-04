@@ -31,10 +31,4 @@ class StaticText extends GameObject {
     ctx.font = this.fontSize + "px " + this.font; // need to set the font each time, as it might have been changed by other gameObjects.
     ctx.fillText(this.text, this.x, this.y);
   }
-
-  // render() {
-  //   ctx.fillStyle = this.colour;
-  //   ctx.font = this.fontSize + "px " + this.font; // need to set the font each time, as it might have been changed by other gameObjects.
-  //   ctx.fillText(this.text, this.x, this.y);
-  // }
 }
