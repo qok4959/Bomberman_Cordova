@@ -8,10 +8,6 @@ class Game extends CanvasGame {
     super();
     this.widthOfAPlane = CHARACTER_SCALE;
 
-    /* this.mazeCtx will be used for collision detection */
-
-    // squareSizeX = canvas.width / this.widthOfAPlane;
-    // squareSizeY = canvas.height / this.widthOfAPlane;
     this.everythingIsGenerated = false;
 
     this.generateBorder();
@@ -26,11 +22,14 @@ class Game extends CanvasGame {
 
   clearPlane = () => {};
 
+  // TODO unable bot to destroy himself
   collisionDetection() {
-    // for
     tempArr.map((posX, indexX) => {
       posX.map((posY, indexY) => {
-        if (tempArr[indexX][indexY] == EXPLOSION) {
+        if (
+          tempArr[indexX][indexY] == EXPLOSION ||
+          tempArr[indexX][indexY] == EXPLOSION_ENEMY
+        ) {
           if (
             indexX == gameObjects[PLAYER_NUMBER].getCentreX() &&
             indexY == gameObjects[PLAYER_NUMBER].getCentreY()
@@ -40,7 +39,8 @@ class Game extends CanvasGame {
           }
           if (
             indexX == gameObjects[BOT_NUMBER].getCentreX() &&
-            indexY == gameObjects[BOT_NUMBER].getCentreY()
+            indexY == gameObjects[BOT_NUMBER].getCentreY() &&
+            tempArr[indexX][indexY] == EXPLOSION
           ) {
             console.log("bot lose a point of health");
             this.decreaseCharacterLifes(BOT_NUMBER);
@@ -48,11 +48,6 @@ class Game extends CanvasGame {
         }
       });
     });
-    // console.log(
-    //   gameObjects[CHARACTER_NUMBER].getCentreX() +
-    //     " " +
-    //     gameObjects[CHARACTER_NUMBER].getCentreY()
-    // );
 
     if (isGameOver) return;
   }
@@ -99,15 +94,9 @@ class Game extends CanvasGame {
     plane.map((x) => {
       backupPlane.push([...x]);
     });
-    // this.delaySetFlag(5000);
+
     this.everythingIsGenerated = true;
   };
-
-  // delaySetFlag = (del) => {
-  //   setTimeout(() => {
-  //     this.everythingIsGenerated = true;
-  //   }, del);
-  // };
 
   placeABomb = (CHARACTER_NUMBER) => {
     gameObjects[CHARACTER_NUMBER].decreaseAvailableBombsCount();
@@ -120,16 +109,17 @@ class Game extends CanvasGame {
     setTimeout(() => {
       this.detonateABomb(posBombX, posBombY, CHARACTER_NUMBER);
     }, 600);
-
-    // gameObjects[CHARACTER_NUMBER].setBomb(false);
   };
 
-  // TODO fix this
-
   detonateABomb = (posX, posY, CHARACTER_NUMBER) => {
-    // console.log("detonateABomb");
-
     const bombRadius = 3;
+
+    // this is to prevent bot destroying himself
+    let typeOfExplosion;
+
+    typeOfExplosion =
+      CHARACTER_NUMBER == PLAYER_NUMBER ? EXPLOSION : EXPLOSION_ENEMY;
+
     let topColided = false,
       leftColided = false,
       bottomColided = false,
@@ -137,7 +127,7 @@ class Game extends CanvasGame {
     for (let i = 0; i < bombRadius; i++) {
       //middle
       if (i == 0) {
-        plane[posX + i][posY] = EXPLOSION;
+        plane[posX + i][posY] = typeOfExplosion;
         this.arrReturn.push({ x: posX, y: posY });
         continue;
       }
@@ -146,7 +136,7 @@ class Game extends CanvasGame {
       if (posX + i < this.widthOfAPlane) {
         if (plane[posX + i][posY] != OBSTACLE && !rightColided) {
           this.arrReturn.push({ x: posX + i, y: posY });
-          plane[posX + i][posY] = EXPLOSION;
+          plane[posX + i][posY] = typeOfExplosion;
         } else rightColided = true;
       }
 
@@ -154,14 +144,14 @@ class Game extends CanvasGame {
       if (posX - i >= 0) {
         if (plane[posX - i][posY] != OBSTACLE && !leftColided) {
           this.arrReturn.push({ x: posX - i, y: posY });
-          plane[posX - i][posY] = EXPLOSION;
+          plane[posX - i][posY] = typeOfExplosion;
         } else leftColided = true;
       }
 
       //top
       if (posY + i < this.widthOfAPlane) {
         if (plane[posX][posY + i] != OBSTACLE && !topColided) {
-          plane[posX][posY + i] = EXPLOSION;
+          plane[posX][posY + i] = typeOfExplosion;
           this.arrReturn.push({ x: posX, y: posY + i });
         } else topColided = true;
       }
@@ -170,7 +160,7 @@ class Game extends CanvasGame {
       if (posY - i >= 0) {
         if (plane[posX][posY - i] != OBSTACLE && !bottomColided) {
           this.arrReturn.push({ x: posX, y: posY - i });
-          plane[posX][posY - i] = EXPLOSION;
+          plane[posX][posY - i] = typeOfExplosion;
         } else bottomColided = true;
       }
     }
@@ -202,7 +192,6 @@ class Game extends CanvasGame {
   };
 
   renderPlane = () => {
-    // console.log("renderPlane");
     plane.map((posX, indexX) => {
       posX.map((posY, indexY) => {
         switch (posY) {
@@ -228,6 +217,7 @@ class Game extends CanvasGame {
             );
             break;
           case EXPLOSION:
+          case EXPLOSION_ENEMY:
             let tempIndex = Math.floor(Math.random() * (99999 - 10) + 10);
             gameObjects[tempIndex] = new Explosion(
               explosionImage,
@@ -242,6 +232,7 @@ class Game extends CanvasGame {
 
             !this.isTempArrClearExecuted && this.tempArrClear();
             break;
+
           case UNDETONATED_BOMB:
             ctx.drawImage(
               tileBomb,
@@ -296,16 +287,16 @@ class Game extends CanvasGame {
         gameObjects[CHARACTER_NUMBER].decreaseCharacterLifes();
       isGameOver = true;
 
-      /* Player has lost */
-      // for (
-      //   let i = 0;
-      //   i < gameObjects.length;
-      //   i++ /* stop all gameObjects from animating */
-      // ) {
-      //   gameObjects[i].stop();
-      // }
-
-      document.getElementById("btnReset").style.visibility = "visible";
+      if (CHARACTER_NUMBER == PLAYER_NUMBER) {
+        document.getElementById("btnReset").style.visibility = "visible";
+        document.getElementById("messageInfo").innerHTML = "You have lost!";
+        document.getElementById("messageInfo").style.visibility = "visible";
+      } else {
+        document.getElementById("btnReset").style.visibility = "visible";
+        document.getElementById("messageInfo").style.color = "#7FFF00";
+        document.getElementById("messageInfo").innerHTML = "You have won!";
+        document.getElementById("messageInfo").style.visibility = "visible";
+      }
     }
   };
 
@@ -325,6 +316,7 @@ class Game extends CanvasGame {
     gameObjects[BOT_NUMBER].resetLifes();
     gameObjects[PLAYER_NUMBER].resetLifes();
     document.getElementById("btnReset").style.visibility = "hidden";
+    document.getElementById("messageInfo").style.visibility = "hidden";
 
     plane = [];
     backupPlane.map((x) => {
