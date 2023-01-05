@@ -35,8 +35,6 @@ class Explosion extends GameObject {
   }
 
   updateState() {
-
-
     this.currentgameObject++;
 
     this.column++;
@@ -47,7 +45,7 @@ class Explosion extends GameObject {
   }
 
   render() {
-
+    console.log("explosionRender");
     offCtx.drawImage(
       this.explosionImage,
       this.column * this.SPRITE_WIDTH,

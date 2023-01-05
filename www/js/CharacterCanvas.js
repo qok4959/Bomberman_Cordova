@@ -107,6 +107,7 @@ class CharacterCanvas extends CanvasGame {
           100,
           "red"
         );
+        gameObjects[WIN_MESSAGE].stopAndHide();
         gameObjects[WIN_MESSAGE].start(); /* render win message */
       }
     } else if (gameObjects[CHARACTER].getDirection() === RIGHT) {
@@ -231,25 +232,29 @@ class CharacterCanvas extends CanvasGame {
       isBottomColided = false;
     for (let i = 0; i < 3; i++) {
       if (i == 0) {
-        gameObjects[gameObjects.length] = new Explosion(
-          explosionImage,
-          posX,
-          posY,
-          this.tileSize
+        gameObjects.push(
+          new Explosion(explosionImage, posX, posY, this.tileSize)
         );
         gameObjects[gameObjects.length - 1].start();
+        gameObjects[gameObjects.length - 1].stopAndHide();
         continue;
       }
 
       //top
-      if (!this.isBombRadiusGoingThroughAWall(posX, posY + i * this.tileSize) && !isTopColided) {
-        gameObjects[gameObjects.length] = new Explosion(
-          explosionImage,
-          posX,
-          posY + i * this.tileSize,
-          this.tileSize
+      if (
+        !this.isBombRadiusGoingThroughAWall(posX, posY + i * this.tileSize) &&
+        !isTopColided
+      ) {
+        gameObjects.push(
+          new Explosion(
+            explosionImage,
+            posX,
+            posY + i * this.tileSize,
+            this.tileSize
+          )
         );
         gameObjects[gameObjects.length - 1].start();
+        gameObjects[gameObjects.length - 1].stopAndHide();
       } else {
         isTopColided = true;
       }
@@ -259,13 +264,16 @@ class CharacterCanvas extends CanvasGame {
         !this.isBombRadiusGoingThroughAWall(posX + i * this.tileSize, posY) &&
         !isRightColided
       ) {
-        gameObjects[gameObjects.length] = new Explosion(
-          explosionImage,
-          posX + i * this.tileSize,
-          posY,
-          this.tileSize
+        gameObjects.push(
+          new Explosion(
+            explosionImage,
+            posX + i * this.tileSize,
+            posY,
+            this.tileSize
+          )
         );
         gameObjects[gameObjects.length - 1].start();
+        gameObjects[gameObjects.length - 1].stopAndHide();
       } else {
         isRightColided = true;
       }
@@ -275,13 +283,16 @@ class CharacterCanvas extends CanvasGame {
         !this.isBombRadiusGoingThroughAWall(posX - i * this.tileSize, posY) &&
         !isLeftColided
       ) {
-        gameObjects[gameObjects.length] = new Explosion(
-          explosionImage,
-          posX - i * this.tileSize,
-          posY,
-          this.tileSize
+        gameObjects.push(
+          new Explosion(
+            explosionImage,
+            posX - i * this.tileSize,
+            posY,
+            this.tileSize
+          )
         );
         gameObjects[gameObjects.length - 1].start();
+        gameObjects[gameObjects.length - 1].stopAndHide();
       } else {
         isLeftColided = true;
       }
@@ -291,19 +302,23 @@ class CharacterCanvas extends CanvasGame {
         !this.isBombRadiusGoingThroughAWall(posX, posY - i * this.tileSize) &&
         !isBottomColided
       ) {
-        gameObjects[gameObjects.length] = new Explosion(
-          explosionImage,
-          posX,
-          posY - i * this.tileSize,
-          this.tileSize
+        gameObjects.push(
+          new Explosion(
+            explosionImage,
+            posX,
+            posY - i * this.tileSize,
+            this.tileSize
+          )
         );
         gameObjects[gameObjects.length - 1].start();
+        gameObjects[gameObjects.length - 1].stopAndHide();
       } else {
         isBottomColided = true;
       }
 
       //recurrency
-      this.resetOffsetCtx(20);
+      this.resetOffsetCtx(1, 0);
+      this.resetOffsetCtx(1, 800);
     }
 
     this.bombRecovering();
@@ -313,15 +328,12 @@ class CharacterCanvas extends CanvasGame {
     setTimeout(() => {
       gameObjects[CHARACTER].recoverBomb();
       this.isBombShocking = false;
+      this.clearUnnecessaryGameObjects();
     }, 1000);
   };
 
-  resetOffsetCtx = (x) => {
-    console.log("resetOffSet");
+  resetOffsetCtx = (x, delay) => {
     setTimeout(() => {
-      console.log("resetOffSetTimeout");
-      // offCtx.reset();
-
       offCtx.clearRect(0, 0, canvas.width, canvas.height);
 
       offCtx.drawImage(this.canvasBack, 0, 0);
@@ -330,7 +342,7 @@ class CharacterCanvas extends CanvasGame {
       }
 
       if (x > 0) this.resetOffsetCtx(x - 1);
-    }, 40);
+    }, delay);
   };
 
   isTransparent = (arr, posX, posY) => {
@@ -391,6 +403,8 @@ class CharacterCanvas extends CanvasGame {
       "red"
     );
 
+    gameObjects[INFO_BOMBS].stopAndHide();
+    gameObjects[INFO_LIFES].stopAndHide();
     gameObjects[INFO_BOMBS].start();
     gameObjects[INFO_LIFES].start();
   };
@@ -409,7 +423,7 @@ class CharacterCanvas extends CanvasGame {
     } else {
       --characterLifes;
       isGameOver = true;
-      /* Player has won */
+      /* Player has lost */
       for (
         let i = 0;
         i < gameObjects.length;
@@ -425,8 +439,16 @@ class CharacterCanvas extends CanvasGame {
         this.tileSize,
         "red"
       );
-      gameObjects[WIN_MESSAGE].start(); /* render win message */
+      gameObjects[WIN_MESSAGE].start();
       document.getElementById("btnReset").style.visibility = "visible";
+    }
+  };
+
+  clearUnnecessaryGameObjects = () => {
+    for (let i = gameObjects.length; i >= 5; i--) {
+      console.log("clearObjects" + gameObjects.length);
+      gameObjects[gameObjects.length - 1].stopAndHide();
+      gameObjects.pop();
     }
   };
 
@@ -435,23 +457,21 @@ class CharacterCanvas extends CanvasGame {
     isGameOver = false;
     characterLifes = 1;
 
-    for (let i = gameObjects.length; i >= 3; i--) {
-      gameObjects.pop();
-    }
+    this.clearUnnecessaryGameObjects();
+
     console.log("length:" + gameObjects.length);
-    for (
-      let i = 0;
-      i < gameObjects.length;
-      i++ /* stop all gameObjects from animating */
-    ) {
-      gameObjects[i].start();
-    }
+    // for (
+    //   let i = 0;
+    //   i < gameObjects.length;
+    //   i++ /* stop all gameObjects from animating */
+    // ) {
+    gameObjects[CHARACTER].start();
+    // }
     this.resetOffsetCtx(1);
     document.getElementById("btnReset").style.visibility = "hidden";
 
     gameObjects[CHARACTER].centreX = this.tileSize * 2;
     gameObjects[CHARACTER].centreY = this.tileSize * 2;
-    // onAllAssetsLoaded();
   };
   playGameLoop() {
     if (gameObjects[CHARACTER].getPlacingBomb()) {
@@ -461,13 +481,11 @@ class CharacterCanvas extends CanvasGame {
     if (this.displayGeneralInfo && this.everythingIsGenerated) {
       this.displayGeneralInfo();
     }
-    // this.displayGeneralInfo();
     super.playGameLoop();
   }
 
   render() {
     super.render();
-    // console.log("xd");
     if (this.offScreenCanvas) ctx.drawImage(this.offScreenCanvas, 0, 0);
   }
 }
