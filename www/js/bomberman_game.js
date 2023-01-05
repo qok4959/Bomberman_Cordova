@@ -42,15 +42,16 @@ const WIN_MESSAGE = 4;
 const BOT_NUMBER = 5;
 const CHARACTER_SCALE = 20;
 const BOT_BOMB = 11;
-
+const UNDETONATED_BOMB = 20;
+const OBSTACLE = 21;
+const EXPLOSION = 22;
+const MOVABLE_TERRAIN = 23;
 let board = [];
 let tempArr = [];
 
 let squareSizeX;
 let squareSizeY;
 
-let characterLifes = 3;
-let botLifes = 1;
 let isGameOver = false;
 let plane = [];
 let backupPlane = [];

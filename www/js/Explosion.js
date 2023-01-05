@@ -36,13 +36,8 @@ class Explosion extends GameObject {
   }
 
   updateState() {
-    // if (this.currentGameObject >= this.NUMBER_OF_SPRITES) this.stopAndHide();
     if (this.row > 6) {
       this.stopAndHide();
-
-      // const end = Date.now();
-
-      // console.log(`Execution time: ${end - this.startTime} ms`);
     }
 
     this.column++;
@@ -53,16 +48,6 @@ class Explosion extends GameObject {
   }
 
   render() {
-    // console.log(
-    //   // "explosionRender",
-    //   this.centreX +
-    //     "\t" +
-    //     this.centreY +
-    //     "\t" +
-    //     squareSizeX +
-    //     "\t" +
-    //     squareSizeY
-    // );
     ctx.drawImage(
       this.explosionImage,
       this.column * this.SPRITE_WIDTH,

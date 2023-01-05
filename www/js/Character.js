@@ -11,6 +11,8 @@ class Character extends GameObject {
 
     /* These variables depend on the object */
 
+    this.defaultPositionX = posX;
+    this.defaultPositionY = posY;
     this.centreX = posX;
     this.centreY = posY;
     this.bombPosX;
@@ -22,6 +24,9 @@ class Character extends GameObject {
     this.column = 0;
     this.animationStartDelay = 0;
     this.CharacterImage = CharacterImage;
+
+    this.default_character_lifes = 3;
+    this.character_lifes = this.default_character_lifes;
 
     this.bombsLimitCount = 1;
     this.availableBombs = 0;
@@ -42,16 +47,105 @@ class Character extends GameObject {
 
   move = () => {
     if (this.direction === UP) {
-      if (plane[this.centreX][this.centreY - this.Character_SPEED] != 1)
+      if (
+        plane[this.centreX][this.centreY - this.Character_SPEED] != OBSTACLE &&
+        plane[this.centreX][this.centreY - this.Character_SPEED] !=
+          UNDETONATED_BOMB
+      )
         this.centreY -= this.Character_SPEED;
     } else if (this.direction === LEFT) {
-      if (plane[this.centreX - this.Character_SPEED][this.centreY] != 1)
+      if (
+        plane[this.centreX - this.Character_SPEED][this.centreY] != OBSTACLE &&
+        plane[this.centreX - this.Character_SPEED][this.centreY] !=
+          UNDETONATED_BOMB
+      )
         this.centreX -= this.Character_SPEED;
     } else if (this.direction === DOWN) {
-      if (plane[this.centreX][this.centreY + this.Character_SPEED] != 1)
+      if (
+        plane[this.centreX][this.centreY + this.Character_SPEED] != OBSTACLE &&
+        plane[this.centreX][this.centreY + this.Character_SPEED] !=
+          UNDETONATED_BOMB
+      )
         this.centreY += this.Character_SPEED;
     } else if (this.direction === RIGHT) {
-      if (plane[this.centreX + this.Character_SPEED][this.centreY] != 1)
+      if (
+        plane[this.centreX + this.Character_SPEED][this.centreY] != OBSTACLE &&
+        plane[this.centreX + this.Character_SPEED][this.centreY] !=
+          UNDETONATED_BOMB
+      )
+        this.centreX += this.Character_SPEED;
+    }
+
+    if (this.direction !== STOPPED) {
+      this.column++;
+      this.currentgameObject++;
+
+      if (this.currentgameObject >= this.endgameObject) {
+        this.row = this.direction;
+        this.column = 0;
+        this.currentgameObject = this.startgameObject;
+      } else if (this.column >= this.NUMBER_OF_COLUMNS_IN_SPRITE_IMAGE) {
+        this.column = 0;
+        this.row++;
+      }
+    } // stopped
+    else {
+      // this.column = 0;
+      this.row = 2;
+      this.currentgameObject = 0;
+    }
+  };
+
+  randomMove = () => {
+    let randomDirection = parseInt(Math.random() * 10);
+
+    switch (randomDirection) {
+      case 1:
+        this.direction = UP;
+        break;
+      case 2:
+        this.direction = LEFT;
+        break;
+      case 3:
+        this.direction = DOWN;
+        break;
+      case 4:
+        this.direction = RIGHT;
+        break;
+      case 5:
+        gameObjects[BOT_NUMBER].putABomb();
+        break;
+    }
+
+    //1 - obstacle
+    //2 - undetonated bomb
+    if (this.direction === UP) {
+      if (
+        plane[this.centreX][this.centreY - this.Character_SPEED] != OBSTACLE &&
+        plane[this.centreX][this.centreY - this.Character_SPEED] !=
+          UNDETONATED_BOMB
+      )
+        this.centreY -= this.Character_SPEED;
+    } else if (this.direction === LEFT) {
+      if (
+        plane[this.centreX - this.Character_SPEED][this.centreY] != OBSTACLE &&
+        plane[this.centreX - this.Character_SPEED][this.centreY] !=
+          UNDETONATED_BOMB
+      )
+        this.centreX -= this.Character_SPEED;
+    } else if (this.direction === DOWN) {
+      if (
+        plane[this.centreX][this.centreY + this.Character_SPEED] != OBSTACLE &&
+        plane[this.centreX][this.centreY + this.Character_SPEED] !=
+          UNDETONATED_BOMB
+      )
+        this.centreY += this.Character_SPEED;
+    } else if (this.direction === RIGHT) {
+      if (
+        plane[this.centreX + this.Character_SPEED][this.centreY] != OBSTACLE &&
+        plane[this.centreX + this.Character_SPEED][this.centreY] !=
+          UNDETONATED_BOMB
+      )
         this.centreX += this.Character_SPEED;
     }
 
@@ -124,6 +218,10 @@ class Character extends GameObject {
 
   getBombPosY = () => this.bombPosY;
 
+  getDefaultPositionX = () => this.defaultPositionX;
+
+  getDefaultPositionY = () => this.defaultPositionY;
+
   decreaseAvailableBombsCount = () => {
     if (this.availableBombs > 0) --this.availableBombs;
   };
@@ -136,6 +234,16 @@ class Character extends GameObject {
 
   increaseBombsInfoCount = () => ++this.bombsInfoCount;
 
+  resetLifes = () => {
+    this.character_lifes = this.default_character_lifes;
+  };
+
+  decreaseCharacterLifes = () => {
+    if (this.character_lifes > 0) --this.character_lifes;
+  };
+
+  getCharacterLifes = () => this.character_lifes;
+
   putABomb = () => {
     if (this.bombsInfoCount > 0) {
       this.bombPosX = this.centreX;
@@ -145,4 +253,4 @@ class Character extends GameObject {
     }
   };
 }
-BOT_NUMBER
+BOT_NUMBER;
