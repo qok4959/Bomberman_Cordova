@@ -169,7 +169,7 @@ class Character extends GameObject {
     }
   };
 
-  drawCharacter = (x, y) => {
+  drawCharacter = () => {
     ctx.drawImage(
       this.CharacterImage,
       this.column * this.SPRITE_WIDTH + 3 * this.SPRITE_WIDTH * 2,
@@ -182,10 +182,33 @@ class Character extends GameObject {
       squareSizeY
     );
 
-    this.drawAnimation(x, y);
+    this.drawAnimation();
   };
 
-  drawAnimation = (x, y) => {};
+  // TODO animation
+  drawAnimation = () => {
+    // const tempX = this.centreX - 1;
+    // const tempY = this.centreY - 1;
+    // for (let i = tempX; i < tempX + 1; i += 0.1) {
+    //   ctx.drawImage(
+    //     this.CharacterImage,
+    //     this.column * this.SPRITE_WIDTH + 3 * this.SPRITE_WIDTH * 2,
+    //     this.row * this.SPRITE_WIDTH + 4 * this.SPRITE_HEIGHT,
+    //     this.SPRITE_WIDTH,
+    //     this.SPRITE_HEIGHT,
+    //     i * squareSizeX,
+    //     this.centreY * squareSizeY,
+    //     squareSizeX,
+    //     squareSizeY
+    //   );
+    //   ctx.clearRect(
+    //     (this.centreX - 1) * i,
+    //     this.centreX,
+    //     this.squareSizeX,
+    //     this.squareSizeY
+    //   );
+    // }
+  };
 
   setDirection(newDirection) {
     this.direction = newDirection;

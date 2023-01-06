@@ -1,12 +1,56 @@
 /* Author: Derek O Reilly, Dundalk Institute of Technology, Ireland. */
 /* style class for game's container, canvas and loading message      */
 
+body {
+  background-color: #013220;
+}
 #gameContainer {
   /* style the gameContainer if the game includes non-canvas elements */
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  height: 95vh;
+  width: 95vw;
+  max-width: 95vw;
+  max-height: 95vh;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+header {
+  position: absolute;
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: 0;
+  width: 100vw;
+  height: 7vh;
+  background-color: #e1ad01;
+  font-size: 3rem;
+  bottom: 0px;
+  color: #3e363f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+footer {
+  position: absolute;
+  left: 0;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 0px;
+  width: 100vw;
+  height: 3vh;
+  background-color: #e1ad01;
+  font-size: 1rem;
+  color: #3e363f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
 }
 
 #gameCanvas {
@@ -15,39 +59,28 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: 95vw;
-  height: 50vh;
+  width: 40vw;
+  height: 40vw;
   /* border: 3px solid black; */
   /* border-radius: 10px; */
 }
 
-#loadingMessage {
-  position: absolute;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-  top: 30vh;
-  width: 50vw;
-  color: #9d311e;
-  z-index: 100;
-  font-size: 20vh;
-}
-
 #messageInfo {
-  z-index: 100;
   position: absolute;
   left: 0;
-  right: 0;
   margin-left: auto;
   margin-right: auto;
-  top: 20vh;
-  width: 30vw;
-  height: 10vh;
+  top: 40vh;
+  width: 100vw;
+  height: 7vh;
   color: #9d311e;
   font-weight: bold;
-  font-size: 5rem;
+  font-size: 3rem;
   visibility: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
 }
 
 #btnReset {
@@ -66,36 +99,44 @@
   visibility: hidden;
 }
 
-#gameCanvas {
-  height: 96vh;
-  width: 95vw;
-  font-size: 20vh;
-}
-@media (orientation: landscape) {
+@media all and (orientation: portrait) {
   #gameCanvas {
-    height: 96vh;
-    width: 95vw;
-    font-size: 20vh;
+    /* the canvas styling usually does not change */
+
+    width: 100vw;
+    height: 100vw;
+    /* border: 3px solid black; */
+    /* border-radius: 10px; */
   }
-}
-
-@media (orientation: portrait) {
-  #gameCanvas {
-    /* margin-top: calc(); */
-    display: block;
-    height: 96vw;
-    width: 96vh;
+  #messageInfo {
+    z-index: 100;
     position: absolute;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    transform: rotate(90deg);
-    top: 48vw;
-    overflow: hidden;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    top: 5vh;
+    width: 100vw;
+    height: 10vh;
+    color: #9d311e;
+    font-weight: bold;
+    font-size: 3rem;
+    visibility: hidden;
+  }
 
-    /* align-items: center; */
-    /* justify-content: center; */
-    /* box-sizing: border-box; */
+  #btnReset {
+    z-index: 100;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    top: 80vh;
+    width: 100vw;
+    height: 10vh;
+    color: whitesmoke;
+    font-size: 3rem;
+    background-color: #9d311e;
+    visibility: hidden;
   }
 }

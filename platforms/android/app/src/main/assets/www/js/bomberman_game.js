@@ -10,7 +10,8 @@ const CharacterImage = new Image();
 CharacterImage.src = "images/characters_sheet.png";
 
 const background = new Image();
-background.src = "images/blue_background.jpg";
+// background.src = "images/blue_background.jpg";
+background.src = "images/backgroundTest.jpg";
 
 const tileObstacle = new Image();
 tileObstacle.src = "images/tile_obstacle.png";
@@ -42,15 +43,17 @@ const WIN_MESSAGE = 4;
 const BOT_NUMBER = 5;
 const CHARACTER_SCALE = 20;
 const BOT_BOMB = 11;
-
+const UNDETONATED_BOMB = 20;
+const OBSTACLE = 21;
+const EXPLOSION = 22;
+const MOVABLE_TERRAIN = 23;
+const EXPLOSION_ENEMY = 24;
 let board = [];
 let tempArr = [];
 
 let squareSizeX;
 let squareSizeY;
 
-let characterLifes = 3;
-let botLifes = 1;
 let isGameOver = false;
 let plane = [];
 let backupPlane = [];
@@ -87,6 +90,12 @@ function playGame() {
 
   //image, posX, posY, speed
   gameObjects[PLAYER_NUMBER] = new Character(CharacterImage, 3, 3, 1);
+  gameObjects[BOT_NUMBER] = new Character(
+    CharacterImage,
+    CHARACTER_SCALE - 4,
+    CHARACTER_SCALE - 4,
+    1
+  );
 
   /* END OF player specific code. */
 

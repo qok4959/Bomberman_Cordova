@@ -1,12 +1,17 @@
 /* Author: Derek O Reilly, Dundalk Institute of Technology, Ireland. */
 /* style class for game's container, canvas and loading message      */
 
+body {
+  background-color: #013220;
+}
 #gameContainer {
   /* style the gameContainer if the game includes non-canvas elements */
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  height: 90vh;
+  width: 95vw;
 }
 
 #gameCanvas {
@@ -15,24 +20,26 @@
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  width: 95vw;
-  height: 50vh;
-  border: 3px solid black;
-  border-radius: 10px;
+  width: 50vw;
+  height: 50vw;
+  /* border: 3px solid black; */
+  /* border-radius: 10px; */
 }
 
-#loadingMessage {
-  /* the loading message styling usually does not change */
-  /* position: absolute;
+#messageInfo {
+  z-index: 100;
+  position: absolute;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
-  top: 30vh;
-  width: 50vw;
+  top: 20vh;
+  width: 30vw;
+  height: 10vh;
   color: #9d311e;
-  z-index: 100;
-  font-size: 20vh; */
+  font-weight: bold;
+  font-size: 5rem;
+  visibility: hidden;
 }
 
 #btnReset {
@@ -51,44 +58,13 @@
   visibility: hidden;
 }
 
-#gameCanvas {
-  height: 96vh;
-  width: 95vw;
-  font-size: 20vh;
-}
-@media (orientation: landscape) {
+@media screen {
   #gameCanvas {
-    height: 96vh;
+    /* the canvas styling usually does not change */
+
     width: 95vw;
-    font-size: 20vh;
-  }
-}
-
-/* @media (orientation: portrait) {
-  #loadingMessage {
-    font-size: 5vh;
-    top: 0;
-    top: 23vh;
-  }
-} */
-
-@media only screen and (orientation: portrait) {
-  #gameCanvas {
-    height: 96vw;
-    width: 95vh;
-    -webkit-transform: rotate(90deg);
-    -moz-transform: rotate(90deg);
-    -o-transform: rotate(90deg);
-    -ms-transform: rotate(90deg);
-    transform: rotate(90deg);
-  }
-}
-@media only screen and (orientation: landscape) {
-  #gameContainer {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    transform: rotate(0deg);
+    height: 95vw;
+    /* border: 3px solid black; */
+    /* border-radius: 10px; */
   }
 }

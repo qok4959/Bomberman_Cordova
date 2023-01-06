@@ -173,7 +173,7 @@ class Game extends CanvasGame {
   displayGeneralInfo = (CHARACTER_NUMBER) => {
     gameObjects[INFO_BOMBS] = new StaticText(
       "Bombs: " + gameObjects[CHARACTER_NUMBER].getBombsInfoCount(),
-      3 * squareSizeX,
+      2 * squareSizeX,
       (squareSizeY * 5) / 6,
       "Times Roman",
       squareSizeY,
@@ -181,7 +181,7 @@ class Game extends CanvasGame {
     );
     gameObjects[INFO_LIFES] = new StaticText(
       "Lifes: " + gameObjects[CHARACTER_NUMBER].getCharacterLifes(),
-      this.widthOfAPlane * squareSizeX - 3 * squareSizeX,
+      this.widthOfAPlane * squareSizeX - 5 * squareSizeX,
       (squareSizeY * 5) / 6,
       "Times Roman",
       squareSizeY,
@@ -291,9 +291,10 @@ class Game extends CanvasGame {
         document.getElementById("btnReset").style.visibility = "visible";
         document.getElementById("messageInfo").innerHTML = "You have lost!";
         document.getElementById("messageInfo").style.visibility = "visible";
+        document.getElementById("messageInfo").style.color = "#9d311e";
       } else {
         document.getElementById("btnReset").style.visibility = "visible";
-        document.getElementById("messageInfo").style.color = "#7FFF00";
+        document.getElementById("messageInfo").style.color = "#e1ad01";
         document.getElementById("messageInfo").innerHTML = "You have won!";
         document.getElementById("messageInfo").style.visibility = "visible";
       }

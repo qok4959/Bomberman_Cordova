@@ -10,7 +10,8 @@ const CharacterImage = new Image();
 CharacterImage.src = "images/characters_sheet.png";
 
 const background = new Image();
-background.src = "images/blue_background.jpg";
+// background.src = "images/blue_background.jpg";
+background.src = "images/backgroundTest.jpg";
 
 const tileObstacle = new Image();
 tileObstacle.src = "images/tile_obstacle.png";
@@ -46,7 +47,7 @@ const UNDETONATED_BOMB = 20;
 const OBSTACLE = 21;
 const EXPLOSION = 22;
 const MOVABLE_TERRAIN = 23;
-const EXPLOSION_ENEMY=24;
+const EXPLOSION_ENEMY = 24;
 let board = [];
 let tempArr = [];
 
