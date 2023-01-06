@@ -14,8 +14,9 @@ class Game extends CanvasGame {
     this.generateObjectsOnCanvas();
 
     this.isTempArrClearExecuted = false;
-    this.arrReturn = [];
+    // this.arrReturn = [];
     this.movingProcess = false;
+    
 
     document.getElementById("btnReset").onclick = this.restartTheGame;
   }
@@ -54,20 +55,20 @@ class Game extends CanvasGame {
 
   generateBorder = () => {
     for (let i = 0; i < this.widthOfAPlane; i++) {
-      let tempArr = [];
+      let localArr = [];
       for (let j = 0; j < this.widthOfAPlane; j++) {
         if (i == 0 || i == this.widthOfAPlane - 1) {
-          tempArr.push(OBSTACLE);
+          localArr.push(OBSTACLE);
           continue;
         }
         if (j == 0 || j == this.widthOfAPlane - 1) {
-          tempArr.push(OBSTACLE);
+          localArr.push(OBSTACLE);
           continue;
         }
 
-        tempArr.push(0);
+        localArr.push(0);
       }
-      plane.push(tempArr);
+      plane.push(localArr);
     }
   };
 
@@ -111,6 +112,7 @@ class Game extends CanvasGame {
     }, 600);
   };
 
+  // TODO while detonating the bomb at the same time as bot then player doesnt lose hp.
   detonateABomb = (posX, posY, CHARACTER_NUMBER) => {
     const bombRadius = 3;
 
@@ -128,14 +130,14 @@ class Game extends CanvasGame {
       //middle
       if (i == 0) {
         plane[posX + i][posY] = typeOfExplosion;
-        this.arrReturn.push({ x: posX, y: posY });
+        // this.arrReturn.push({ x: posX, y: posY });
         continue;
       }
 
       //right
       if (posX + i < this.widthOfAPlane) {
         if (plane[posX + i][posY] != OBSTACLE && !rightColided) {
-          this.arrReturn.push({ x: posX + i, y: posY });
+          // this.arrReturn.push({ x: posX + i, y: posY });
           plane[posX + i][posY] = typeOfExplosion;
         } else rightColided = true;
       }
@@ -143,7 +145,7 @@ class Game extends CanvasGame {
       //left
       if (posX - i >= 0) {
         if (plane[posX - i][posY] != OBSTACLE && !leftColided) {
-          this.arrReturn.push({ x: posX - i, y: posY });
+          // this.arrReturn.push({ x: posX - i, y: posY });
           plane[posX - i][posY] = typeOfExplosion;
         } else leftColided = true;
       }
@@ -152,14 +154,14 @@ class Game extends CanvasGame {
       if (posY + i < this.widthOfAPlane) {
         if (plane[posX][posY + i] != OBSTACLE && !topColided) {
           plane[posX][posY + i] = typeOfExplosion;
-          this.arrReturn.push({ x: posX, y: posY + i });
+          // this.arrReturn.push({ x: posX, y: posY + i });
         } else topColided = true;
       }
 
       //bottom
       if (posY - i >= 0) {
         if (plane[posX][posY - i] != OBSTACLE && !bottomColided) {
-          this.arrReturn.push({ x: posX, y: posY - i });
+          // this.arrReturn.push({ x: posX, y: posY - i });
           plane[posX][posY - i] = typeOfExplosion;
         } else bottomColided = true;
       }

@@ -58,11 +58,17 @@ let isGameOver = false;
 let plane = [];
 let backupPlane = [];
 let moved = false;
+let accelerometer = new Accelerometer({ frequency: 60 });
+
 /******************* END OF Declare player specific data and functions *****************/
 
 /* Always have a playGame() function                                     */
 /* However, the content of this function will be different for each player */
 function playGame() {
+  accelerometer.start();
+  accelerometer.orientation = "portrait";
+  setInterval(movingDevice, 10);
+
   if (squareSizeX == undefined) {
     squareSizeX = canvas.width / CHARACTER_SCALE;
   }
@@ -105,6 +111,45 @@ function playGame() {
   game.start();
 
   /* If they are needed, then include any player-specific mouse and keyboard listners */
+  let movedAccelerometer = false;
+
+  function movingDevice() {
+    // let tempX = this.x - acl.x * this.vx;
+    // let tempY = this.y + acl.y * this.vx;
+
+    // if (tempX <= this.maxX - this.ballWidth && tempX >= 10) this.x = tempX;
+    // if (tempY <= this.maxY - this.ballWidth && tempY >= 10) this.y = tempY;
+
+    // this.ball_img.style.left = this.x + "px";
+    // this.ball_img.style.top = this.y + "px";
+    if (movedAccelerometer) return;
+
+    if (Math.abs(accelerometer.x > Math.abs(accelerometer.y))) {
+      movedAccelerometer = true;
+      if (accelerometer.x < 0) {
+        gameObjects[PLAYER_NUMBER].setDirection(RIGHT);
+      } else {
+        gameObjects[PLAYER_NUMBER].setDirection(LEFT);
+      }
+    } else {
+      movedAccelerometer = true;
+      if (accelerometer.y > 0) {
+        gameObjects[PLAYER_NUMBER].setDirection(DOWN);
+      } else {
+        gameObjects[PLAYER_NUMBER].setDirection(UP);
+      }
+    }
+
+    if (movedAccelerometer)
+      setTimeout(() => {
+        movedAccelerometer = false;
+      }, 200);
+  }
+
+  addEventListener("touchend", (event) => {
+    gameObjects[PLAYER_NUMBER].putABomb();
+  });
+
   document.addEventListener("keydown", function (e) {
     if (isGameOver || moved) return;
     if (e.keyCode === 37) {
