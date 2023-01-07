@@ -165,7 +165,7 @@ public class PluginResult {
     public static final int MESSAGE_TYPE_BOOLEAN = 4;
     public static final int MESSAGE_TYPE_NULL = 5;
     public static final int MESSAGE_TYPE_ARRAYBUFFER = 6;
-    // Use BINARYSTRING when your string may contain null Characters.
+    // Use BINARYSTRING when your string may contain null characters.
     // This is required to work around a bug in the platform :(.
     public static final int MESSAGE_TYPE_BINARYSTRING = 7;
     public static final int MESSAGE_TYPE_MULTIPART = 8;

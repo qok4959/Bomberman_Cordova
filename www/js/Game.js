@@ -16,7 +16,6 @@ class Game extends CanvasGame {
     this.isTempArrClearExecuted = false;
     // this.arrReturn = [];
     this.movingProcess = false;
-    
 
     document.getElementById("btnReset").onclick = this.restartTheGame;
   }
@@ -36,6 +35,7 @@ class Game extends CanvasGame {
             indexY == gameObjects[PLAYER_NUMBER].getCentreY()
           ) {
             console.log("player lose a point of health");
+            navigator.vibrate(1000);
             this.decreaseCharacterLifes(PLAYER_NUMBER);
           }
           if (
@@ -109,7 +109,7 @@ class Game extends CanvasGame {
 
     setTimeout(() => {
       this.detonateABomb(posBombX, posBombY, CHARACTER_NUMBER);
-    }, 600);
+    }, 1800);
   };
 
   // TODO while detonating the bomb at the same time as bot then player doesnt lose hp.
@@ -304,7 +304,6 @@ class Game extends CanvasGame {
   };
 
   randomMoveDelay = () => {
-    // console.log("co jest");
     this.movingProcess = true;
     setTimeout(() => {
       gameObjects[BOT_NUMBER].randomMove();

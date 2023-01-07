@@ -65,26 +65,12 @@ let accelerometer = new Accelerometer({ frequency: 60 });
 /* Always have a playGame() function                                     */
 /* However, the content of this function will be different for each player */
 function playGame() {
-  accelerometer.start();
-  accelerometer.orientation = "portrait";
-  setInterval(movingDevice, 10);
-
   if (squareSizeX == undefined) {
     squareSizeX = canvas.width / CHARACTER_SCALE;
   }
   if (squareSizeY == undefined) {
     squareSizeY = canvas.height / CHARACTER_SCALE;
   }
-  /* We need to initialise the player objects outside of the player class */
-  /* This function does this initialisation.                          */
-  /* This function will:                                              */
-  /* 1. create the various player player gameObjects                   */
-  /* 2. store the player gameObjects in an array                     */
-  /* 3. create a new player to display the player gameObjects          */
-  /* 4. start the player                                                */
-
-  /* Create the various gameObjects for this player. */
-  /* This is player specific code. It will be different for each player, as each player will have it own gameObjects */
 
   gameObjects[BACKGROUND] = new StaticImage(
     background,
@@ -103,7 +89,13 @@ function playGame() {
     1
   );
 
-  /* END OF player specific code. */
+  // TODO check device
+
+  accelerometer.start();
+  accelerometer.orientation = "portrait";
+  setInterval(movingDevice, 10);
+
+  // console.log(navigator.vibrate);
 
   /* Always create a player that uses the gameObject array */
   let game = new Game();
@@ -113,18 +105,15 @@ function playGame() {
   /* If they are needed, then include any player-specific mouse and keyboard listners */
   let movedAccelerometer = false;
 
+  // if (device.platform === "android") {
+  //   console.log("android");
+  // } else {
+  //   console.log(device.platform);
+  // }
   function movingDevice() {
-    // let tempX = this.x - acl.x * this.vx;
-    // let tempY = this.y + acl.y * this.vx;
-
-    // if (tempX <= this.maxX - this.ballWidth && tempX >= 10) this.x = tempX;
-    // if (tempY <= this.maxY - this.ballWidth && tempY >= 10) this.y = tempY;
-
-    // this.ball_img.style.left = this.x + "px";
-    // this.ball_img.style.top = this.y + "px";
     if (movedAccelerometer) return;
 
-    if (Math.abs(accelerometer.x > Math.abs(accelerometer.y))) {
+    if (Math.abs(accelerometer.x) > Math.abs(accelerometer.y)) {
       movedAccelerometer = true;
       if (accelerometer.x < 0) {
         gameObjects[PLAYER_NUMBER].setDirection(RIGHT);
