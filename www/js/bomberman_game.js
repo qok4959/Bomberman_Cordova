@@ -41,7 +41,7 @@ const INFO_BOMBS = 2;
 const INFO_LIFES = 3;
 const WIN_MESSAGE = 4;
 const BOT_NUMBER = 5;
-const CHARACTER_SCALE = 20;
+const CHARACTER_SCALE = 15;
 const BOT_BOMB = 11;
 const UNDETONATED_BOMB = 20;
 const OBSTACLE = 21;
@@ -89,11 +89,11 @@ function playGame() {
     1
   );
 
-  // TODO check device
-
   accelerometer.start();
   accelerometer.orientation = "portrait";
-  setInterval(movingDevice, 10);
+
+  navigator.appVersion.indexOf("Android") != -1 &&
+    setInterval(movingDevice, 10);
 
   // console.log(navigator.vibrate);
 
@@ -105,13 +105,8 @@ function playGame() {
   /* If they are needed, then include any player-specific mouse and keyboard listners */
   let movedAccelerometer = false;
 
-  // if (device.platform === "android") {
-  //   console.log("android");
-  // } else {
-  //   console.log(device.platform);
-  // }
   function movingDevice() {
-    if (movedAccelerometer) return;
+    if (movedAccelerometer || isGameOver) return;
 
     if (Math.abs(accelerometer.x) > Math.abs(accelerometer.y)) {
       movedAccelerometer = true;
@@ -136,6 +131,7 @@ function playGame() {
   }
 
   addEventListener("touchend", (event) => {
+    if (isGameOver) return;
     gameObjects[PLAYER_NUMBER].putABomb();
   });
 

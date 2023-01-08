@@ -169,10 +169,21 @@ class Character extends GameObject {
     }
   };
 
-  drawCharacter = () => {
+  drawCharacter = (CHARACTER_NUMBER) => {
+    let localWidthMultiplier;
+    let localHeightMultiplier;
+    if (CHARACTER_NUMBER == PLAYER_NUMBER) {
+      localWidthMultiplier = 1; //= 3 * this.SPRITE_WIDTH;
+      // localHeightMultiplier = 4;
+    } else {
+      localWidthMultiplier = 3 * this.SPRITE_WIDTH * 2;
+      // localHeightMultiplier = 4;
+    }
+
     ctx.drawImage(
       this.CharacterImage,
-      this.column * this.SPRITE_WIDTH + 3 * this.SPRITE_WIDTH * 2,
+      // this.column * this.SPRITE_WIDTH + 3 * this.SPRITE_WIDTH * 2,
+      this.column * this.SPRITE_WIDTH + localWidthMultiplier,
       this.row * this.SPRITE_WIDTH + 4 * this.SPRITE_HEIGHT,
       this.SPRITE_WIDTH,
       this.SPRITE_HEIGHT,
@@ -276,4 +287,3 @@ class Character extends GameObject {
     }
   };
 }
-BOT_NUMBER;

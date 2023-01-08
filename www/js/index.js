@@ -22,11 +22,12 @@ let gameObjects = [];
 /* Wait for all game assets, such as audio and images to load before starting the game */
 /* The code below will work for both websites and Cordova mobile apps                  */
 window.addEventListener("load", onAllAssetsLoaded); // needed for websites
-document.addEventListener("deviceready", onAllAssetsLoaded); // needed for Cordova mobile apps
+document.addEventListener("deviceready", onAllAssetsLoaded, false); // needed for Cordova mobile apps
 
 document.write("<div id='loadingMessage'>Loading...</div>");
 function onAllAssetsLoaded() {
   /* hide the webpage loading message */
+
   document.getElementById("loadingMessage").style.visibility = "hidden";
 
   /* Initialise the canvas and associated variables */

@@ -209,7 +209,7 @@ class Game extends CanvasGame {
               this.displayGeneralInfo(PLAYER_NUMBER);
             break;
           case PLAYER_NUMBER:
-            gameObjects[PLAYER_NUMBER].drawCharacter();
+            gameObjects[PLAYER_NUMBER].drawCharacter(PLAYER_NUMBER);
             ctx.drawImage(
               tileObstacle,
               indexX * squareSizeX,
@@ -245,7 +245,7 @@ class Game extends CanvasGame {
             );
             break;
           case BOT_NUMBER:
-            gameObjects[BOT_NUMBER].drawCharacter();
+            gameObjects[BOT_NUMBER].drawCharacter(BOT_NUMBER);
             ctx.drawImage(
               tileObstacle,
               indexX * squareSizeX,
