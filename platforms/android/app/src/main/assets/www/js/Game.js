@@ -22,7 +22,7 @@ class Game extends CanvasGame {
 
   clearPlane = () => {};
 
-  // TODO unable bot to destroy himself
+  // TODO while bomb is exploding at the same time as bot, then player doesnt lose hp
   collisionDetection() {
     tempArr.map((posX, indexX) => {
       posX.map((posY, indexY) => {

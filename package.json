@@ -26,5 +26,8 @@
     "plugins": {
       "cordova-plugin-device": {}
     }
+  },
+  "dependencies": {
+    "firebase": "^9.13.0"
   }
 }

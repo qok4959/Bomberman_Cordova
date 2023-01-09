@@ -27,7 +27,7 @@ document.addEventListener("deviceready", onAllAssetsLoaded, false); // needed fo
 document.write("<div id='loadingMessage'>Loading...</div>");
 function onAllAssetsLoaded() {
   /* hide the webpage loading message */
-
+ 
   document.getElementById("loadingMessage").style.visibility = "hidden";
 
   /* Initialise the canvas and associated variables */

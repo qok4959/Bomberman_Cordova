@@ -6,6 +6,8 @@
 /******************** Declare player specific global data and functions *****************/
 /* images must be declared as global, so that they will load before the player starts  */
 
+
+
 const CharacterImage = new Image();
 CharacterImage.src = "images/characters_sheet.png";
 
@@ -60,11 +62,14 @@ let backupPlane = [];
 let moved = false;
 let accelerometer = new Accelerometer({ frequency: 60 });
 
+let isFirebaseSet = false;
 /******************* END OF Declare player specific data and functions *****************/
 
 /* Always have a playGame() function                                     */
 /* However, the content of this function will be different for each player */
 function playGame() {
+  
+
   if (squareSizeX == undefined) {
     squareSizeX = canvas.width / CHARACTER_SCALE;
   }

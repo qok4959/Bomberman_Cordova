@@ -22,7 +22,7 @@ class Game extends CanvasGame {
 
   clearPlane = () => {};
 
-  // TODO unable bot to destroy himself
+  // TODO while bomb is exploding at the same time as bot, then player doesnt lose hp
   collisionDetection() {
     tempArr.map((posX, indexX) => {
       posX.map((posY, indexY) => {
@@ -312,6 +312,11 @@ class Game extends CanvasGame {
   };
 
   restartTheGame = () => {
+    // saveTheScore("winner", 105);
+    // $.getScript("test.js", function () {
+    //   alert("Script loaded but not necessarily executed.");
+    // });
+
     console.log("restarting!");
     isGameOver = false;
 

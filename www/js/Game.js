@@ -312,6 +312,11 @@ class Game extends CanvasGame {
   };
 
   restartTheGame = () => {
+    // saveTheScore("winner", 105);
+    // $.getScript("test.js", function () {
+    //   alert("Script loaded but not necessarily executed.");
+    // });
+
     console.log("restarting!");
     isGameOver = false;
 
