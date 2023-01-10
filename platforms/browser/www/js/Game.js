@@ -94,6 +94,7 @@ class Game extends CanvasGame {
 
     plane.map((x) => {
       backupPlane.push([...x]);
+      tempArr.push([...x]);
     });
 
     this.everythingIsGenerated = true;
@@ -115,7 +116,7 @@ class Game extends CanvasGame {
   // TODO while detonating the bomb at the same time as bot then player doesnt lose hp.
   detonateABomb = (posX, posY, CHARACTER_NUMBER) => {
     const bombRadius = 3;
-
+    let tempSquaresToClear = [];
     // this is to prevent bot destroying himself
     let typeOfExplosion;
 
@@ -131,6 +132,8 @@ class Game extends CanvasGame {
       if (i == 0) {
         plane[posX + i][posY] = typeOfExplosion;
         // this.arrReturn.push({ x: posX, y: posY });
+        tempArr[posX][posY] = typeOfExplosion;
+        tempSquaresToClear.push({ x: posX, y: posY });
         continue;
       }
 
@@ -138,6 +141,8 @@ class Game extends CanvasGame {
       if (posX + i < this.widthOfAPlane) {
         if (plane[posX + i][posY] != OBSTACLE && !rightColided) {
           // this.arrReturn.push({ x: posX + i, y: posY });
+          tempSquaresToClear.push({ x: posX + i, y: posY });
+          tempArr[posX + 1][posY] = typeOfExplosion;
           plane[posX + i][posY] = typeOfExplosion;
         } else rightColided = true;
       }
@@ -146,6 +151,8 @@ class Game extends CanvasGame {
       if (posX - i >= 0) {
         if (plane[posX - i][posY] != OBSTACLE && !leftColided) {
           // this.arrReturn.push({ x: posX - i, y: posY });
+          tempSquaresToClear.push({ x: posX - i, y: posY });
+          tempArr[posX - 1][posY] = typeOfExplosion;
           plane[posX - i][posY] = typeOfExplosion;
         } else leftColided = true;
       }
@@ -154,6 +161,8 @@ class Game extends CanvasGame {
       if (posY + i < this.widthOfAPlane) {
         if (plane[posX][posY + i] != OBSTACLE && !topColided) {
           plane[posX][posY + i] = typeOfExplosion;
+          tempSquaresToClear.push({ x: posX, y: posY + i });
+          tempArr[posX][posY + i] = typeOfExplosion;
           // this.arrReturn.push({ x: posX, y: posY + i });
         } else topColided = true;
       }
@@ -162,14 +171,28 @@ class Game extends CanvasGame {
       if (posY - i >= 0) {
         if (plane[posX][posY - i] != OBSTACLE && !bottomColided) {
           // this.arrReturn.push({ x: posX, y: posY - i });
+          tempSquaresToClear.push({ x: posX, y: posY - i });
+          tempArr[posX][posY - i] = typeOfExplosion;
           plane[posX][posY - i] = typeOfExplosion;
         } else bottomColided = true;
       }
     }
 
-    plane.map((x) => {
-      tempArr.push([...x]);
-    });
+    // TODO change after testing
+    // plane.map((x) => {
+    //   tempArr.push([...x]);
+    // });
+    this.clearCollisionArrayAfterDelay(tempSquaresToClear);
+  };
+
+  clearCollisionArrayAfterDelay = (tArr) => {
+    setTimeout(() => {
+      console.log(tArr, tempArr);
+
+      tArr.map((pos) => {
+        tempArr[pos.x][pos.y] = OBSTACLE;
+      });
+    }, 700);
   };
 
   displayGeneralInfo = (CHARACTER_NUMBER) => {
@@ -266,7 +289,7 @@ class Game extends CanvasGame {
   tempArrClear = () => {
     this.isTempArrClearExecuted = true;
     setTimeout(() => {
-      tempArr = [];
+      // tempArr = [];
 
       this.isTempArrClearExecuted = false;
       gameObjects[PLAYER_NUMBER].getBombsInfoCount() < 1 &&
