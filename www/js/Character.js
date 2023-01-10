@@ -4,13 +4,14 @@ class Character extends GameObject {
   /* Each gameObject MUST have a constructor() and a render() method.        */
   /* If the object animates, then it must also have an updateState() method. */
 
-  constructor(CharacterImage, posX, posY, speed) {
+  constructor(CharacterImage, posX, posY, speed, character_number) {
     super(
       40
     ); /* as this class extends from GameObject, you must always call super() */
 
     /* These variables depend on the object */
 
+    this.CHARACTER_NUMBER = character_number;
     this.defaultPositionX = posX;
     this.defaultPositionY = posY;
     this.centreX = posX;
@@ -31,7 +32,7 @@ class Character extends GameObject {
     this.bombsLimitCount = 1;
     this.availableBombs = 0;
     this.bombsInfoCount = this.bombsLimitCount;
-
+    this.ableToMove = false;
     //global variable
 
     this.SPRITE_WIDTH =
@@ -96,7 +97,10 @@ class Character extends GameObject {
     }
   };
 
+  isAbleToMove = () => this.ableToMove;
+
   randomMove = () => {
+    if (!this.ableToMove) return;
     let randomDirection = parseInt(Math.random() * 10);
 
     switch (randomDirection) {
@@ -113,7 +117,7 @@ class Character extends GameObject {
         this.direction = RIGHT;
         break;
       case 5:
-        gameObjects[BOT_FIRST].putABomb();
+        gameObjects[this.CHARACTER_NUMBER].putABomb();
         break;
     }
 
@@ -169,7 +173,9 @@ class Character extends GameObject {
     }
   };
 
+  // TODO animation
   drawCharacter = (CHARACTER_NUMBER) => {
+    if (!this.ableToMove && CHARACTER_NUMBER != PLAYER_NUMBER) return;
     let localWidthMultiplier;
     let localHeightMultiplier;
     if (CHARACTER_NUMBER == PLAYER_NUMBER) {
@@ -243,7 +249,9 @@ class Character extends GameObject {
   setCentreY(val) {
     this.centreY = val;
   }
-
+  setAbleToMove(cond) {
+    this.ableToMove = cond;
+  }
   getCentreX = () => this.centreX;
 
   getCentreY = () => this.centreY;

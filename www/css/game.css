@@ -82,7 +82,20 @@ footer {
   justify-content: center;
   font-weight: bold;
 }
-
+#mySelect {
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: 40vh;
+  width: 20vw;
+  height: 10vh;
+  color: #3e363f;
+  font-size: 1.5rem;
+  background-color: #e1ad01;
+}
 #btnReset {
   z-index: 100;
   position: absolute;
@@ -96,7 +109,7 @@ footer {
   color: whitesmoke;
   font-size: 3rem;
   background-color: #9d311e;
-  visibility: hidden;
+  /* visibility: hidden; */
 }
 
 @media all and (orientation: portrait) {
