@@ -181,8 +181,14 @@ class Character extends GameObject {
     if (CHARACTER_NUMBER == PLAYER_NUMBER) {
       localWidthMultiplier = 1; //= 3 * this.SPRITE_WIDTH;
       // localHeightMultiplier = 4;
-    } else {
+    } else if (CHARACTER_NUMBER == BOT_FIRST) {
       localWidthMultiplier = 3 * this.SPRITE_WIDTH * 2;
+      // localHeightMultiplier = 4;
+    } else if (CHARACTER_NUMBER == BOT_SECOND) {
+      localWidthMultiplier = 3 * this.SPRITE_WIDTH * 3;
+      // localHeightMultiplier = 4;
+    } else if (CHARACTER_NUMBER == BOT_THIRD) {
+      localWidthMultiplier = 4 * this.SPRITE_WIDTH * 3;
       // localHeightMultiplier = 4;
     }
 

@@ -112,6 +112,43 @@ footer {
   /* visibility: hidden; */
 }
 
+#listBox {
+  z-index: 100;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  top: 15vh;
+  width: 20vw;
+  height: 20vh;
+  color: #3e363f;
+  font-size: 1rem;
+  background-color: #e1ad01;
+  overflow-y: auto;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+nav ul {
+  height: 15vh;
+  width: 20vw;
+}
+nav ul {
+  overflow: hidden;
+  overflow-y: scroll;
+}
+
 @media all and (orientation: portrait) {
   #gameCanvas {
     /* the canvas styling usually does not change */
@@ -150,6 +187,20 @@ footer {
     color: whitesmoke;
     font-size: 3rem;
     background-color: #9d311e;
-    visibility: hidden;
+  }
+
+  #mySelect {
+    z-index: 100;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    top: 40vh;
+    width: 70vw;
+    height: 10vh;
+    color: #3e363f;
+    font-size: 1rem;
+    background-color: #e1ad01;
   }
 }

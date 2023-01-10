@@ -41,6 +41,8 @@ const INFO_BOMBS = 2;
 const INFO_LIFES = 3;
 const WIN_MESSAGE = 4;
 const BOT_FIRST = 5;
+const BOT_SECOND = 6;
+const BOT_THIRD = 7;
 const CHARACTER_SCALE = 15;
 const BOT_BOMB = 11;
 const UNDETONATED_BOMB = 20;
@@ -48,13 +50,20 @@ const OBSTACLE = 21;
 const EXPLOSION = 22;
 const MOVABLE_TERRAIN = 23;
 const EXPLOSION_ENEMY = 24;
+let difficultyString = "EASY";
+const Difficulty = {
+  EASY: 1,
+  MEDIUM: 2,
+  HARD: 3,
+};
+let Difficulty_status = Difficulty.EASY;
 let board = [];
 let tempArr = [];
 
 let squareSizeX;
 let squareSizeY;
 
-let isGameOver = false;
+let isGameOver = true;
 let plane = [];
 let backupPlane = [];
 let moved = false;
@@ -63,6 +72,8 @@ let accelerometer = new Accelerometer({ frequency: 60 });
 let isFirebaseSet = false;
 /******************* END OF Declare player specific data and functions *****************/
 
+// let conn = new DB();
+// conn.saveTheScore("winner", 50);
 /* Always have a playGame() function                                     */
 /* However, the content of this function will be different for each player */
 function playGame() {
@@ -82,12 +93,35 @@ function playGame() {
   );
 
   //image, posX, posY, speed
-  gameObjects[PLAYER_NUMBER] = new Character(CharacterImage, 3, 3, 1);
+  gameObjects[PLAYER_NUMBER] = new Character(
+    CharacterImage,
+    3,
+    3,
+    1,
+    PLAYER_NUMBER
+  );
   gameObjects[BOT_FIRST] = new Character(
     CharacterImage,
     CHARACTER_SCALE - 4,
     CHARACTER_SCALE - 4,
-    1
+    1,
+    BOT_FIRST
+  );
+
+  gameObjects[BOT_SECOND] = new Character(
+    CharacterImage,
+    3,
+    CHARACTER_SCALE - 4,
+    1,
+    BOT_SECOND
+  );
+
+  gameObjects[BOT_THIRD] = new Character(
+    CharacterImage,
+    CHARACTER_SCALE - 4,
+    3,
+    1,
+    BOT_THIRD
   );
 
   accelerometer.start();

@@ -14,13 +14,11 @@ class Game extends CanvasGame {
     this.generateObjectsOnCanvas();
 
     this.isTempArrClearExecuted = false;
-    // this.arrReturn = [];
+
     this.movingProcess = false;
 
     document.getElementById("btnReset").onclick = this.restartTheGame;
   }
-
-  clearPlane = () => {};
 
   collisionDetection() {
     tempArr.map((posX, indexX) => {
@@ -42,8 +40,26 @@ class Game extends CanvasGame {
             indexY == gameObjects[BOT_FIRST].getCentreY() &&
             tempArr[indexX][indexY] == EXPLOSION
           ) {
-            console.log("bot lose a point of health");
+            console.log("bot1 lose a point of health");
             this.decreaseCharacterLifes(BOT_FIRST);
+          }
+
+          if (
+            indexX == gameObjects[BOT_SECOND].getCentreX() &&
+            indexY == gameObjects[BOT_SECOND].getCentreY() &&
+            tempArr[indexX][indexY] == EXPLOSION
+          ) {
+            console.log("bot2 lose a point of health");
+            this.decreaseCharacterLifes(BOT_SECOND);
+          }
+
+          if (
+            indexX == gameObjects[BOT_THIRD].getCentreX() &&
+            indexY == gameObjects[BOT_THIRD].getCentreY() &&
+            tempArr[indexX][indexY] == EXPLOSION
+          ) {
+            console.log("bot3 lose a point of health");
+            this.decreaseCharacterLifes(BOT_THIRD);
           }
         }
       });
@@ -90,6 +106,8 @@ class Game extends CanvasGame {
 
     plane[0][0] = PLAYER_NUMBER;
     plane[CHARACTER_SCALE - 1][CHARACTER_SCALE - 1] = BOT_FIRST;
+    plane[CHARACTER_SCALE - 1][0] = BOT_SECOND;
+    plane[0][CHARACTER_SCALE - 1] = BOT_THIRD;
 
     plane.map((x) => {
       backupPlane.push([...x]);
@@ -104,12 +122,11 @@ class Game extends CanvasGame {
     let posBombX = gameObjects[CHARACTER_NUMBER].getBombPosX();
     let posBombY = gameObjects[CHARACTER_NUMBER].getBombPosY();
 
-    console.log(posBombX + " " + posBombY);
     plane[posBombX][posBombY] = UNDETONATED_BOMB;
 
     setTimeout(() => {
       this.detonateABomb(posBombX, posBombY, CHARACTER_NUMBER);
-    }, 1800);
+    }, 1000);
   };
 
   detonateABomb = (posX, posY, CHARACTER_NUMBER) => {
@@ -179,8 +196,6 @@ class Game extends CanvasGame {
 
   clearCollisionArrayAfterDelay = (tArr) => {
     setTimeout(() => {
-      console.log(tArr, tempArr);
-
       tArr.map((pos) => {
         tempArr[pos.x][pos.y] = OBSTACLE;
       });
@@ -269,6 +284,26 @@ class Game extends CanvasGame {
               squareSizeY
             );
             break;
+          case BOT_SECOND:
+            gameObjects[BOT_SECOND].drawCharacter(BOT_SECOND);
+            ctx.drawImage(
+              tileObstacle,
+              indexX * squareSizeX,
+              indexY * squareSizeY,
+              squareSizeX,
+              squareSizeY
+            );
+            break;
+          case BOT_THIRD:
+            gameObjects[BOT_THIRD].drawCharacter(BOT_THIRD);
+            ctx.drawImage(
+              tileObstacle,
+              indexX * squareSizeX,
+              indexY * squareSizeY,
+              squareSizeX,
+              squareSizeY
+            );
+            break;
         }
       });
     });
@@ -288,6 +323,10 @@ class Game extends CanvasGame {
         gameObjects[PLAYER_NUMBER].increaseBombsInfoCount();
       gameObjects[BOT_FIRST].getBombsInfoCount() < 1 &&
         gameObjects[BOT_FIRST].increaseBombsInfoCount();
+      gameObjects[BOT_SECOND].getBombsInfoCount() < 1 &&
+        gameObjects[BOT_SECOND].increaseBombsInfoCount();
+      gameObjects[BOT_THIRD].getBombsInfoCount() < 1 &&
+        gameObjects[BOT_THIRD].increaseBombsInfoCount();
     }, 700);
   };
 
@@ -299,44 +338,82 @@ class Game extends CanvasGame {
         gameObjects[CHARACTER_NUMBER].getDefaultPositionY();
 
       gameObjects[CHARACTER_NUMBER].decreaseCharacterLifes();
-    } else {
+    } else if (gameObjects[CHARACTER_NUMBER].getCharacterLifes() > 0) {
       gameObjects[CHARACTER_NUMBER].getCharacterLifes() > 0 &&
         gameObjects[CHARACTER_NUMBER].decreaseCharacterLifes();
-      isGameOver = true;
 
+      gameObjects[CHARACTER_NUMBER].setAbleToMove(false);
       if (CHARACTER_NUMBER == PLAYER_NUMBER) {
+        isGameOver = true;
+        window.saveScore("lose", difficultyString);
+        document.getElementById("mySelect").style.visibility = "visible";
         document.getElementById("btnReset").style.visibility = "visible";
         document.getElementById("messageInfo").innerHTML = "You have lost!";
         document.getElementById("messageInfo").style.visibility = "visible";
         document.getElementById("messageInfo").style.color = "#9d311e";
       } else {
+        --this.aliveEnemies;
+      }
+      if (this.aliveEnemies == 0) {
+        window.saveScore("winner", difficultyString);
+        isGameOver = true;
+        document.getElementById("mySelect").style.visibility = "visible";
         document.getElementById("btnReset").style.visibility = "visible";
         document.getElementById("messageInfo").style.color = "#e1ad01";
         document.getElementById("messageInfo").innerHTML = "You have won!";
         document.getElementById("messageInfo").style.visibility = "visible";
       }
     }
+    console.log(this.aliveEnemies);
   };
 
   randomMoveDelay = () => {
     this.movingProcess = true;
     setTimeout(() => {
       gameObjects[BOT_FIRST].randomMove();
+      gameObjects[BOT_SECOND].randomMove();
+      gameObjects[BOT_THIRD].randomMove();
       this.movingProcess = false;
     }, 200);
   };
 
   restartTheGame = () => {
-    // saveTheScore("winner", 105);
-    // $.getScript("test.js", function () {
-    //   alert("Script loaded but not necessarily executed.");
-    // });
+    gameObjects[BOT_FIRST].setAbleToMove(false);
+    gameObjects[BOT_SECOND].setAbleToMove(false);
+    gameObjects[BOT_THIRD].setAbleToMove(false);
 
-    console.log("restarting!");
+    document.getElementById("mySelect").style.visibility = "hidden";
+    Difficulty_status = document.querySelector(
+      'input[name="difficulty"]:checked'
+    ).value;
+
+    if (Difficulty_status == Difficulty.EASY) this.aliveEnemies = 1;
+    else if (Difficulty_status == Difficulty.MEDIUM) this.aliveEnemies = 2;
+    else this.aliveEnemies = 3;
+
+    switch (parseInt(Difficulty_status)) {
+      case Difficulty.HARD:
+        difficultyString = "HARD";
+        gameObjects[BOT_SECOND].setAbleToMove(true);
+        gameObjects[BOT_THIRD].setAbleToMove(true);
+        break;
+      case Difficulty.MEDIUM:
+        difficultyString = "MEDIUM";
+        gameObjects[BOT_SECOND].setAbleToMove(true);
+        break;
+      case Difficulty.EASY:
+        difficultyString = "EASY";
+        break;
+    }
+
+    gameObjects[BOT_FIRST].setAbleToMove(true);
+
     isGameOver = false;
 
     gameObjects[BOT_FIRST].resetLifes();
     gameObjects[PLAYER_NUMBER].resetLifes();
+    gameObjects[BOT_SECOND].resetLifes();
+    gameObjects[BOT_THIRD].resetLifes();
     document.getElementById("btnReset").style.visibility = "hidden";
     document.getElementById("messageInfo").style.visibility = "hidden";
 
@@ -345,11 +422,25 @@ class Game extends CanvasGame {
       plane.push([...x]);
     });
 
-    gameObjects[PLAYER_NUMBER].centreX = 3;
-    gameObjects[PLAYER_NUMBER].centreY = 3;
+    gameObjects[PLAYER_NUMBER].centreX =
+      gameObjects[PLAYER_NUMBER].getDefaultPositionX();
+    gameObjects[PLAYER_NUMBER].centreY =
+      gameObjects[PLAYER_NUMBER].getDefaultPositionY();
 
-    gameObjects[BOT_FIRST].centreX = CHARACTER_SCALE - 4;
-    gameObjects[BOT_FIRST].centreY = CHARACTER_SCALE - 4;
+    gameObjects[BOT_FIRST].centreX =
+      gameObjects[BOT_FIRST].getDefaultPositionX();
+    gameObjects[BOT_FIRST].centreY =
+      gameObjects[BOT_FIRST].getDefaultPositionY();
+
+    gameObjects[BOT_SECOND].centreX =
+      gameObjects[BOT_SECOND].getDefaultPositionX();
+    gameObjects[BOT_SECOND].centreY =
+      gameObjects[BOT_SECOND].getDefaultPositionY();
+
+    gameObjects[BOT_THIRD].centreX =
+      gameObjects[BOT_THIRD].getDefaultPositionX();
+    gameObjects[BOT_THIRD].centreY =
+      gameObjects[BOT_THIRD].getDefaultPositionY();
   };
 
   playGameLoop() {
@@ -362,8 +453,25 @@ class Game extends CanvasGame {
       }
 
     if (gameObjects[BOT_FIRST])
-      if (gameObjects[BOT_FIRST].getAvailableBombs() > 0) {
+      if (
+        gameObjects[BOT_FIRST].getAvailableBombs() > 0 &&
+        gameObjects[BOT_FIRST].isAbleToMove()
+      ) {
         this.placeABomb(BOT_FIRST);
+      }
+    if (gameObjects[BOT_SECOND])
+      if (
+        gameObjects[BOT_SECOND].getAvailableBombs() > 0 &&
+        gameObjects[BOT_SECOND].isAbleToMove()
+      ) {
+        this.placeABomb(BOT_SECOND);
+      }
+    if (gameObjects[BOT_THIRD])
+      if (
+        gameObjects[BOT_THIRD].getAvailableBombs() > 0 &&
+        gameObjects[BOT_THIRD].isAbleToMove()
+      ) {
+        this.placeABomb(BOT_THIRD);
       }
     if (
       this.randomMoveDelay &&
