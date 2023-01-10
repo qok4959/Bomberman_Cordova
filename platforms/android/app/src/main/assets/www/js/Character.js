@@ -113,7 +113,7 @@ class Character extends GameObject {
         this.direction = RIGHT;
         break;
       case 5:
-        gameObjects[BOT_NUMBER].putABomb();
+        gameObjects[BOT_FIRST].putABomb();
         break;
     }
 

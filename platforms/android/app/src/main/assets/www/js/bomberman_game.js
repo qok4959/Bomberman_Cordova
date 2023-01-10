@@ -40,7 +40,7 @@ const PLAYER_NUMBER = 1;
 const INFO_BOMBS = 2;
 const INFO_LIFES = 3;
 const WIN_MESSAGE = 4;
-const BOT_NUMBER = 5;
+const BOT_FIRST = 5;
 const CHARACTER_SCALE = 15;
 const BOT_BOMB = 11;
 const UNDETONATED_BOMB = 20;
@@ -60,6 +60,7 @@ let backupPlane = [];
 let moved = false;
 let accelerometer = new Accelerometer({ frequency: 60 });
 
+let isFirebaseSet = false;
 /******************* END OF Declare player specific data and functions *****************/
 
 /* Always have a playGame() function                                     */
@@ -82,7 +83,7 @@ function playGame() {
 
   //image, posX, posY, speed
   gameObjects[PLAYER_NUMBER] = new Character(CharacterImage, 3, 3, 1);
-  gameObjects[BOT_NUMBER] = new Character(
+  gameObjects[BOT_FIRST] = new Character(
     CharacterImage,
     CHARACTER_SCALE - 4,
     CHARACTER_SCALE - 4,

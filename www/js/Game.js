@@ -38,12 +38,12 @@ class Game extends CanvasGame {
             this.decreaseCharacterLifes(PLAYER_NUMBER);
           }
           if (
-            indexX == gameObjects[BOT_NUMBER].getCentreX() &&
-            indexY == gameObjects[BOT_NUMBER].getCentreY() &&
+            indexX == gameObjects[BOT_FIRST].getCentreX() &&
+            indexY == gameObjects[BOT_FIRST].getCentreY() &&
             tempArr[indexX][indexY] == EXPLOSION
           ) {
             console.log("bot lose a point of health");
-            this.decreaseCharacterLifes(BOT_NUMBER);
+            this.decreaseCharacterLifes(BOT_FIRST);
           }
         }
       });
@@ -89,7 +89,9 @@ class Game extends CanvasGame {
     }
 
     plane[0][0] = PLAYER_NUMBER;
-    plane[CHARACTER_SCALE - 1][CHARACTER_SCALE - 1] = BOT_NUMBER;
+    plane[CHARACTER_SCALE - 1][CHARACTER_SCALE - 1] = BOT_FIRST;
+    plane[CHARACTER_SCALE - 1][0] = BOT_SECOND;
+    plane[0][CHARACTER_SCALE - 1] = BOT_THIRD;
 
     plane.map((x) => {
       backupPlane.push([...x]);
@@ -104,7 +106,6 @@ class Game extends CanvasGame {
     let posBombX = gameObjects[CHARACTER_NUMBER].getBombPosX();
     let posBombY = gameObjects[CHARACTER_NUMBER].getBombPosY();
 
-    console.log(posBombX + " " + posBombY);
     plane[posBombX][posBombY] = UNDETONATED_BOMB;
 
     setTimeout(() => {
@@ -179,8 +180,6 @@ class Game extends CanvasGame {
 
   clearCollisionArrayAfterDelay = (tArr) => {
     setTimeout(() => {
-      console.log(tArr, tempArr);
-
       tArr.map((pos) => {
         tempArr[pos.x][pos.y] = OBSTACLE;
       });
@@ -259,8 +258,28 @@ class Game extends CanvasGame {
               squareSizeY
             );
             break;
-          case BOT_NUMBER:
-            gameObjects[BOT_NUMBER].drawCharacter(BOT_NUMBER);
+          case BOT_FIRST:
+            gameObjects[BOT_FIRST].drawCharacter(BOT_FIRST);
+            ctx.drawImage(
+              tileObstacle,
+              indexX * squareSizeX,
+              indexY * squareSizeY,
+              squareSizeX,
+              squareSizeY
+            );
+            break;
+          case BOT_SECOND:
+            gameObjects[BOT_SECOND].drawCharacter(BOT_SECOND);
+            ctx.drawImage(
+              tileObstacle,
+              indexX * squareSizeX,
+              indexY * squareSizeY,
+              squareSizeX,
+              squareSizeY
+            );
+            break;
+          case BOT_THIRD:
+            gameObjects[BOT_THIRD].drawCharacter(BOT_THIRD);
             ctx.drawImage(
               tileObstacle,
               indexX * squareSizeX,
@@ -286,8 +305,12 @@ class Game extends CanvasGame {
       this.isTempArrClearExecuted = false;
       gameObjects[PLAYER_NUMBER].getBombsInfoCount() < 1 &&
         gameObjects[PLAYER_NUMBER].increaseBombsInfoCount();
-      gameObjects[BOT_NUMBER].getBombsInfoCount() < 1 &&
-        gameObjects[BOT_NUMBER].increaseBombsInfoCount();
+      gameObjects[BOT_FIRST].getBombsInfoCount() < 1 &&
+        gameObjects[BOT_FIRST].increaseBombsInfoCount();
+      gameObjects[BOT_SECOND].getBombsInfoCount() < 1 &&
+        gameObjects[BOT_SECOND].increaseBombsInfoCount();
+      gameObjects[BOT_THIRD].getBombsInfoCount() < 1 &&
+        gameObjects[BOT_THIRD].increaseBombsInfoCount();
     }, 700);
   };
 
@@ -321,7 +344,9 @@ class Game extends CanvasGame {
   randomMoveDelay = () => {
     this.movingProcess = true;
     setTimeout(() => {
-      gameObjects[BOT_NUMBER].randomMove();
+      gameObjects[BOT_FIRST].randomMove();
+      gameObjects[BOT_SECOND].randomMove();
+      gameObjects[BOT_THIRD].randomMove();
       this.movingProcess = false;
     }, 200);
   };
@@ -335,7 +360,7 @@ class Game extends CanvasGame {
     console.log("restarting!");
     isGameOver = false;
 
-    gameObjects[BOT_NUMBER].resetLifes();
+    gameObjects[BOT_FIRST].resetLifes();
     gameObjects[PLAYER_NUMBER].resetLifes();
     document.getElementById("btnReset").style.visibility = "hidden";
     document.getElementById("messageInfo").style.visibility = "hidden";
@@ -348,8 +373,14 @@ class Game extends CanvasGame {
     gameObjects[PLAYER_NUMBER].centreX = 3;
     gameObjects[PLAYER_NUMBER].centreY = 3;
 
-    gameObjects[BOT_NUMBER].centreX = CHARACTER_SCALE - 4;
-    gameObjects[BOT_NUMBER].centreY = CHARACTER_SCALE - 4;
+    gameObjects[BOT_FIRST].centreX = CHARACTER_SCALE - 4;
+    gameObjects[BOT_FIRST].centreY = CHARACTER_SCALE - 4;
+
+    gameObjects[BOT_SECOND].centreX = 3;
+    gameObjects[BOT_SECOND].centreY = CHARACTER_SCALE - 4;
+
+    gameObjects[BOT_THIRD].centreX = CHARACTER_SCALE - 4;
+    gameObjects[BOT_THIRD].centreY = 3;
   };
 
   playGameLoop() {
@@ -361,9 +392,17 @@ class Game extends CanvasGame {
         this.placeABomb(PLAYER_NUMBER);
       }
 
-    if (gameObjects[BOT_NUMBER])
-      if (gameObjects[BOT_NUMBER].getAvailableBombs() > 0) {
-        this.placeABomb(BOT_NUMBER);
+    if (gameObjects[BOT_FIRST])
+      if (gameObjects[BOT_FIRST].getAvailableBombs() > 0) {
+        this.placeABomb(BOT_FIRST);
+      }
+    if (gameObjects[BOT_SECOND])
+      if (gameObjects[BOT_SECOND].getAvailableBombs() > 0) {
+        this.placeABomb(BOT_SECOND);
+      }
+    if (gameObjects[BOT_THIRD])
+      if (gameObjects[BOT_THIRD].getAvailableBombs() > 0) {
+        this.placeABomb(BOT_THIRD);
       }
     if (
       this.randomMoveDelay &&

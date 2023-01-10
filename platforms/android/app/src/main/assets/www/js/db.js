@@ -8,7 +8,6 @@ import {
   collection,
 } from "https://www.gstatic.com/firebasejs/9.4.0/firebase-firestore.js";
 
-
 // TODO: Replace the following with your app's Firebase project configuration
 // See: https://firebase.google.com/docs/web/learn-more#config-object
 const firebaseConfig = {
@@ -23,8 +22,7 @@ const app = initializeApp(firebaseConfig);
 
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
-
-async function saveScore(score, time) {
+async function saveTheScore(score, time) {
   try {
     const docRef = await addDoc(collection(db, "scores"), {
       gameResult: score,
@@ -37,13 +35,4 @@ async function saveScore(score, time) {
   }
 }
 
-async function getScores() {
-  const citiesCol = collection(db, "scores");
-  const citySnapshot = await getDocs(citiesCol);
-  const cityList = citySnapshot.docs.map((doc) => doc.data());
-  console.log(cityList);
-  return cityList;
-}
 
-window.saveScore = saveScore;
-window.getScores = getScores;

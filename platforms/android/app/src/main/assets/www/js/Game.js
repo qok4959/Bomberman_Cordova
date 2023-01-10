@@ -22,7 +22,6 @@ class Game extends CanvasGame {
 
   clearPlane = () => {};
 
-  // TODO while bomb is exploding at the same time as bot, then player doesnt lose hp
   collisionDetection() {
     tempArr.map((posX, indexX) => {
       posX.map((posY, indexY) => {
@@ -39,12 +38,12 @@ class Game extends CanvasGame {
             this.decreaseCharacterLifes(PLAYER_NUMBER);
           }
           if (
-            indexX == gameObjects[BOT_NUMBER].getCentreX() &&
-            indexY == gameObjects[BOT_NUMBER].getCentreY() &&
+            indexX == gameObjects[BOT_FIRST].getCentreX() &&
+            indexY == gameObjects[BOT_FIRST].getCentreY() &&
             tempArr[indexX][indexY] == EXPLOSION
           ) {
             console.log("bot lose a point of health");
-            this.decreaseCharacterLifes(BOT_NUMBER);
+            this.decreaseCharacterLifes(BOT_FIRST);
           }
         }
       });
@@ -90,10 +89,11 @@ class Game extends CanvasGame {
     }
 
     plane[0][0] = PLAYER_NUMBER;
-    plane[CHARACTER_SCALE - 1][CHARACTER_SCALE - 1] = BOT_NUMBER;
+    plane[CHARACTER_SCALE - 1][CHARACTER_SCALE - 1] = BOT_FIRST;
 
     plane.map((x) => {
       backupPlane.push([...x]);
+      tempArr.push([...x]);
     });
 
     this.everythingIsGenerated = true;
@@ -112,10 +112,9 @@ class Game extends CanvasGame {
     }, 1800);
   };
 
-  // TODO while detonating the bomb at the same time as bot then player doesnt lose hp.
   detonateABomb = (posX, posY, CHARACTER_NUMBER) => {
     const bombRadius = 3;
-
+    let tempSquaresToClear = [];
     // this is to prevent bot destroying himself
     let typeOfExplosion;
 
@@ -130,14 +129,16 @@ class Game extends CanvasGame {
       //middle
       if (i == 0) {
         plane[posX + i][posY] = typeOfExplosion;
-        // this.arrReturn.push({ x: posX, y: posY });
+        tempArr[posX][posY] = typeOfExplosion;
+        tempSquaresToClear.push({ x: posX, y: posY });
         continue;
       }
 
       //right
       if (posX + i < this.widthOfAPlane) {
         if (plane[posX + i][posY] != OBSTACLE && !rightColided) {
-          // this.arrReturn.push({ x: posX + i, y: posY });
+          tempSquaresToClear.push({ x: posX + i, y: posY });
+          tempArr[posX + 1][posY] = typeOfExplosion;
           plane[posX + i][posY] = typeOfExplosion;
         } else rightColided = true;
       }
@@ -145,7 +146,8 @@ class Game extends CanvasGame {
       //left
       if (posX - i >= 0) {
         if (plane[posX - i][posY] != OBSTACLE && !leftColided) {
-          // this.arrReturn.push({ x: posX - i, y: posY });
+          tempSquaresToClear.push({ x: posX - i, y: posY });
+          tempArr[posX - 1][posY] = typeOfExplosion;
           plane[posX - i][posY] = typeOfExplosion;
         } else leftColided = true;
       }
@@ -154,22 +156,35 @@ class Game extends CanvasGame {
       if (posY + i < this.widthOfAPlane) {
         if (plane[posX][posY + i] != OBSTACLE && !topColided) {
           plane[posX][posY + i] = typeOfExplosion;
-          // this.arrReturn.push({ x: posX, y: posY + i });
+          tempSquaresToClear.push({ x: posX, y: posY + i });
+          tempArr[posX][posY + i] = typeOfExplosion;
         } else topColided = true;
       }
 
       //bottom
       if (posY - i >= 0) {
         if (plane[posX][posY - i] != OBSTACLE && !bottomColided) {
-          // this.arrReturn.push({ x: posX, y: posY - i });
+          tempSquaresToClear.push({ x: posX, y: posY - i });
+          tempArr[posX][posY - i] = typeOfExplosion;
           plane[posX][posY - i] = typeOfExplosion;
         } else bottomColided = true;
       }
     }
 
-    plane.map((x) => {
-      tempArr.push([...x]);
-    });
+    // plane.map((x) => {
+    //   tempArr.push([...x]);
+    // });
+    this.clearCollisionArrayAfterDelay(tempSquaresToClear);
+  };
+
+  clearCollisionArrayAfterDelay = (tArr) => {
+    setTimeout(() => {
+      console.log(tArr, tempArr);
+
+      tArr.map((pos) => {
+        tempArr[pos.x][pos.y] = OBSTACLE;
+      });
+    }, 700);
   };
 
   displayGeneralInfo = (CHARACTER_NUMBER) => {
@@ -244,8 +259,8 @@ class Game extends CanvasGame {
               squareSizeY
             );
             break;
-          case BOT_NUMBER:
-            gameObjects[BOT_NUMBER].drawCharacter(BOT_NUMBER);
+          case BOT_FIRST:
+            gameObjects[BOT_FIRST].drawCharacter(BOT_FIRST);
             ctx.drawImage(
               tileObstacle,
               indexX * squareSizeX,
@@ -266,13 +281,13 @@ class Game extends CanvasGame {
   tempArrClear = () => {
     this.isTempArrClearExecuted = true;
     setTimeout(() => {
-      tempArr = [];
+      // tempArr = [];
 
       this.isTempArrClearExecuted = false;
       gameObjects[PLAYER_NUMBER].getBombsInfoCount() < 1 &&
         gameObjects[PLAYER_NUMBER].increaseBombsInfoCount();
-      gameObjects[BOT_NUMBER].getBombsInfoCount() < 1 &&
-        gameObjects[BOT_NUMBER].increaseBombsInfoCount();
+      gameObjects[BOT_FIRST].getBombsInfoCount() < 1 &&
+        gameObjects[BOT_FIRST].increaseBombsInfoCount();
     }, 700);
   };
 
@@ -306,16 +321,21 @@ class Game extends CanvasGame {
   randomMoveDelay = () => {
     this.movingProcess = true;
     setTimeout(() => {
-      gameObjects[BOT_NUMBER].randomMove();
+      gameObjects[BOT_FIRST].randomMove();
       this.movingProcess = false;
     }, 200);
   };
 
   restartTheGame = () => {
+    // saveTheScore("winner", 105);
+    // $.getScript("test.js", function () {
+    //   alert("Script loaded but not necessarily executed.");
+    // });
+
     console.log("restarting!");
     isGameOver = false;
 
-    gameObjects[BOT_NUMBER].resetLifes();
+    gameObjects[BOT_FIRST].resetLifes();
     gameObjects[PLAYER_NUMBER].resetLifes();
     document.getElementById("btnReset").style.visibility = "hidden";
     document.getElementById("messageInfo").style.visibility = "hidden";
@@ -328,8 +348,8 @@ class Game extends CanvasGame {
     gameObjects[PLAYER_NUMBER].centreX = 3;
     gameObjects[PLAYER_NUMBER].centreY = 3;
 
-    gameObjects[BOT_NUMBER].centreX = CHARACTER_SCALE - 4;
-    gameObjects[BOT_NUMBER].centreY = CHARACTER_SCALE - 4;
+    gameObjects[BOT_FIRST].centreX = CHARACTER_SCALE - 4;
+    gameObjects[BOT_FIRST].centreY = CHARACTER_SCALE - 4;
   };
 
   playGameLoop() {
@@ -341,9 +361,9 @@ class Game extends CanvasGame {
         this.placeABomb(PLAYER_NUMBER);
       }
 
-    if (gameObjects[BOT_NUMBER])
-      if (gameObjects[BOT_NUMBER].getAvailableBombs() > 0) {
-        this.placeABomb(BOT_NUMBER);
+    if (gameObjects[BOT_FIRST])
+      if (gameObjects[BOT_FIRST].getAvailableBombs() > 0) {
+        this.placeABomb(BOT_FIRST);
       }
     if (
       this.randomMoveDelay &&

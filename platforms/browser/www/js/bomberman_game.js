@@ -6,8 +6,6 @@
 /******************** Declare player specific global data and functions *****************/
 /* images must be declared as global, so that they will load before the player starts  */
 
-
-
 const CharacterImage = new Image();
 CharacterImage.src = "images/characters_sheet.png";
 
@@ -42,7 +40,9 @@ const PLAYER_NUMBER = 1;
 const INFO_BOMBS = 2;
 const INFO_LIFES = 3;
 const WIN_MESSAGE = 4;
-const BOT_NUMBER = 5;
+const BOT_FIRST = 5;
+const BOT_SECOND = 6;
+const BOT_THIRD = 7;
 const CHARACTER_SCALE = 15;
 const BOT_BOMB = 11;
 const UNDETONATED_BOMB = 20;
@@ -50,6 +50,12 @@ const OBSTACLE = 21;
 const EXPLOSION = 22;
 const MOVABLE_TERRAIN = 23;
 const EXPLOSION_ENEMY = 24;
+const Difficulty = {
+  EASY: 1,
+  MEDIUM: 2,
+  HARD: 3,
+};
+let Difficulty_status = Difficulty.EASY;
 let board = [];
 let tempArr = [];
 
@@ -65,11 +71,13 @@ let accelerometer = new Accelerometer({ frequency: 60 });
 let isFirebaseSet = false;
 /******************* END OF Declare player specific data and functions *****************/
 
+// let conn = new DB();
+// conn.saveTheScore("winner", 50);
 /* Always have a playGame() function                                     */
 /* However, the content of this function will be different for each player */
 function playGame() {
-  
-
+  console.log(window.saveScore("test", 123));
+  console.log(window.getScores());
   if (squareSizeX == undefined) {
     squareSizeX = canvas.width / CHARACTER_SCALE;
   }
@@ -87,10 +95,24 @@ function playGame() {
 
   //image, posX, posY, speed
   gameObjects[PLAYER_NUMBER] = new Character(CharacterImage, 3, 3, 1);
-  gameObjects[BOT_NUMBER] = new Character(
+  gameObjects[BOT_FIRST] = new Character(
     CharacterImage,
     CHARACTER_SCALE - 4,
     CHARACTER_SCALE - 4,
+    1
+  );
+
+  gameObjects[BOT_SECOND] = new Character(
+    CharacterImage,
+    3,
+    CHARACTER_SCALE - 4,
+    1
+  );
+
+  gameObjects[BOT_THIRD] = new Character(
+    CharacterImage,
+    CHARACTER_SCALE - 4,
+    3,
     1
   );
 
