@@ -390,9 +390,17 @@ class Game extends CanvasGame {
       var cell1 = row.insertCell(0);
       var cell2 = row.insertCell(1);
       var cell3 = row.insertCell(2);
+
+      //parse data
+      let rawDate = data.gameDate.toDate().toString();
+      let parsedDate = "";
+      for (let i = 0; i < rawDate.indexOf("GMT"); i++) {
+        parsedDate += rawDate[i];
+      }
+
       cell1.innerHTML = data.result;
       cell2.innerHTML = data.difficulty;
-      cell3.innerHTML = data.gameDate.toDate();
+      cell3.innerHTML = parsedDate;
     });
   }
 

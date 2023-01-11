@@ -31,7 +31,6 @@ class Game extends CanvasGame {
             indexX == gameObjects[PLAYER_NUMBER].getCentreX() &&
             indexY == gameObjects[PLAYER_NUMBER].getCentreY()
           ) {
-            console.log("player lose a point of health");
             navigator.vibrate(1000);
             this.decreaseCharacterLifes(PLAYER_NUMBER);
           }
@@ -40,7 +39,6 @@ class Game extends CanvasGame {
             indexY == gameObjects[BOT_FIRST].getCentreY() &&
             tempArr[indexX][indexY] == EXPLOSION
           ) {
-            console.log("bot1 lose a point of health");
             this.decreaseCharacterLifes(BOT_FIRST);
           }
 
@@ -49,7 +47,6 @@ class Game extends CanvasGame {
             indexY == gameObjects[BOT_SECOND].getCentreY() &&
             tempArr[indexX][indexY] == EXPLOSION
           ) {
-            console.log("bot2 lose a point of health");
             this.decreaseCharacterLifes(BOT_SECOND);
           }
 
@@ -58,7 +55,6 @@ class Game extends CanvasGame {
             indexY == gameObjects[BOT_THIRD].getCentreY() &&
             tempArr[indexX][indexY] == EXPLOSION
           ) {
-            console.log("bot3 lose a point of health");
             this.decreaseCharacterLifes(BOT_THIRD);
           }
         }
@@ -347,7 +343,8 @@ class Game extends CanvasGame {
         document.getElementById("radio-btn-container").style.visibility =
           "visible";
         document.getElementById("button-play").style.visibility = "visible";
-        document.getElementById("results").style.visibility = "visible";
+        document.getElementById("div-container-game-results").style.visibility =
+          "visible";
         document.getElementById("p-game-result").innerHTML = "You have lost!";
         document.getElementById("p-game-result").style.visibility = "visible";
         document.getElementById("p-game-result").style.color = "#9d311e";
@@ -360,13 +357,13 @@ class Game extends CanvasGame {
         document.getElementById("radio-btn-container").style.visibility =
           "visible";
         document.getElementById("button-play").style.visibility = "visible";
-        document.getElementById("results").style.visibility = "visible";
+        document.getElementById("div-container-game-results").style.visibility =
+          "visible";
         document.getElementById("p-game-result").style.color = "#e1ad01";
         document.getElementById("p-game-result").innerHTML = "You have won!";
         document.getElementById("p-game-result").style.visibility = "visible";
       }
     }
-    console.log(this.aliveEnemies);
   };
 
   randomMoveDelay = () => {
@@ -393,9 +390,17 @@ class Game extends CanvasGame {
       var cell1 = row.insertCell(0);
       var cell2 = row.insertCell(1);
       var cell3 = row.insertCell(2);
+
+      //parse data
+      let rawDate = data.gameDate.toDate().toString();
+      let parsedDate = "";
+      for (let i = 0; i < rawDate.indexOf("GMT"); i++) {
+        parsedDate += rawDate[i];
+      }
+
       cell1.innerHTML = data.result;
       cell2.innerHTML = data.difficulty;
-      cell3.innerHTML = data.gameDate.toDate();
+      cell3.innerHTML = parsedDate;
     });
   }
 
@@ -406,7 +411,8 @@ class Game extends CanvasGame {
     gameObjects[BOT_THIRD].setAbleToMove(false);
 
     document.getElementById("radio-btn-container").style.visibility = "hidden";
-    document.getElementById("results").style.visibility = "hidden";
+    document.getElementById("div-container-game-results").style.visibility =
+      "hidden";
     Difficulty_status = document.querySelector(
       'input[name="difficulty"]:checked'
     ).value;

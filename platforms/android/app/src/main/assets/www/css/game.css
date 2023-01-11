@@ -129,6 +129,7 @@ footer {
   font-weight: bold;
   background-color: #e1ad01;
   border-radius: 10px;
+  letter-spacing: 0.5rem;
 }
 
 input[type="radio"]:hover {
@@ -138,7 +139,7 @@ input[type="radio"]:hover {
 #button-play:hover {
   cursor: pointer;
 }
-#results {
+#div-container-game-results {
   z-index: 100;
   position: absolute;
   right: 0;
@@ -161,6 +162,7 @@ table {
 
 th,
 td {
+  border: 0.1rem solid #3e363f;
   text-align: left;
   padding: 8px;
 }
@@ -191,10 +193,10 @@ nav ul {
     height: 10vh;
     color: #9d311e;
     font-weight: bold;
-    font-size: 3rem;
+    font-size: 1.9rem;
     visibility: hidden;
   }
-  #results {
+  #div-container-game-results {
     z-index: 100;
     position: absolute;
     left: 0;
@@ -230,7 +232,7 @@ nav ul {
     margin-left: auto;
     margin-right: auto;
     top: 40vh;
-    width: 70vw;
+    width: 80vw;
     height: 10vh;
     color: #3e363f;
     font-size: 1rem;
