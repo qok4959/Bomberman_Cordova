@@ -17,7 +17,7 @@ class Game extends CanvasGame {
 
     this.movingProcess = false;
     this.generateTable();
-    document.getElementById("btnReset").onclick = this.restartTheGame;
+    document.getElementById("button-play").onclick = this.restartTheGame;
   }
 
   collisionDetection() {
@@ -31,7 +31,6 @@ class Game extends CanvasGame {
             indexX == gameObjects[PLAYER_NUMBER].getCentreX() &&
             indexY == gameObjects[PLAYER_NUMBER].getCentreY()
           ) {
-            console.log("player lose a point of health");
             navigator.vibrate(1000);
             this.decreaseCharacterLifes(PLAYER_NUMBER);
           }
@@ -40,7 +39,6 @@ class Game extends CanvasGame {
             indexY == gameObjects[BOT_FIRST].getCentreY() &&
             tempArr[indexX][indexY] == EXPLOSION
           ) {
-            console.log("bot1 lose a point of health");
             this.decreaseCharacterLifes(BOT_FIRST);
           }
 
@@ -49,7 +47,6 @@ class Game extends CanvasGame {
             indexY == gameObjects[BOT_SECOND].getCentreY() &&
             tempArr[indexX][indexY] == EXPLOSION
           ) {
-            console.log("bot2 lose a point of health");
             this.decreaseCharacterLifes(BOT_SECOND);
           }
 
@@ -58,7 +55,6 @@ class Game extends CanvasGame {
             indexY == gameObjects[BOT_THIRD].getCentreY() &&
             tempArr[indexX][indexY] == EXPLOSION
           ) {
-            console.log("bot3 lose a point of health");
             this.decreaseCharacterLifes(BOT_THIRD);
           }
         }
@@ -98,7 +94,7 @@ class Game extends CanvasGame {
           continue;
         }
 
-        if (Math.random() * 10 > 9) {
+        if (Math.random() * 10 > 8.3) {
           plane[i][j] = OBSTACLE;
         }
       }
@@ -207,16 +203,16 @@ class Game extends CanvasGame {
       "Bombs: " + gameObjects[CHARACTER_NUMBER].getBombsInfoCount(),
       2 * squareSizeX,
       (squareSizeY * 5) / 6,
-      "Times Roman",
-      squareSizeY,
+      "minecraftfont",
+      (squareSizeY * 4) / 5,
       "#7FFF00"
     );
     gameObjects[INFO_LIFES] = new StaticText(
       "Lifes: " + gameObjects[CHARACTER_NUMBER].getCharacterLifes(),
       this.widthOfAPlane * squareSizeX - 5 * squareSizeX,
       (squareSizeY * 5) / 6,
-      "Times Roman",
-      squareSizeY,
+      "minecraftfont",
+      (squareSizeY * 4) / 5,
       "#7FFF00"
     );
     gameObjects[INFO_BOMBS].drawTxt();
@@ -262,7 +258,7 @@ class Game extends CanvasGame {
 
             this.clearPlane(indexX, indexY);
 
-            !this.isTempArrClearExecuted && this.tempArrClear();
+            !this.isTempArrClearExecuted && this.restartBombs();
             break;
 
           case UNDETONATED_BOMB:
@@ -313,11 +309,9 @@ class Game extends CanvasGame {
     plane[posX][posY] = MOVABLE_TERRAIN;
   };
 
-  tempArrClear = () => {
+  restartBombs = () => {
     this.isTempArrClearExecuted = true;
     setTimeout(() => {
-      // tempArr = [];
-
       this.isTempArrClearExecuted = false;
       gameObjects[PLAYER_NUMBER].getBombsInfoCount() < 1 &&
         gameObjects[PLAYER_NUMBER].increaseBombsInfoCount();
@@ -345,28 +339,31 @@ class Game extends CanvasGame {
       gameObjects[CHARACTER_NUMBER].setAbleToMove(false);
       if (CHARACTER_NUMBER == PLAYER_NUMBER) {
         isGameOver = true;
-        window.saveScore("lose", difficultyString);
-        document.getElementById("mySelect").style.visibility = "visible";
-        document.getElementById("btnReset").style.visibility = "visible";
-        document.getElementById("results").style.visibility = "visible";
-        document.getElementById("messageInfo").innerHTML = "You have lost!";
-        document.getElementById("messageInfo").style.visibility = "visible";
-        document.getElementById("messageInfo").style.color = "#9d311e";
+        window.saveScore("LOSE", difficultyString);
+        document.getElementById("radio-btn-container").style.visibility =
+          "visible";
+        document.getElementById("button-play").style.visibility = "visible";
+        document.getElementById("div-container-game-results").style.visibility =
+          "visible";
+        document.getElementById("p-game-result").innerHTML = "You have lost!";
+        document.getElementById("p-game-result").style.visibility = "visible";
+        document.getElementById("p-game-result").style.color = "#9d311e";
       } else {
         --this.aliveEnemies;
       }
       if (this.aliveEnemies == 0) {
-        window.saveScore("winner", difficultyString);
+        window.saveScore("WIN", difficultyString);
         isGameOver = true;
-        document.getElementById("mySelect").style.visibility = "visible";
-        document.getElementById("btnReset").style.visibility = "visible";
-        document.getElementById("results").style.visibility = "visible";
-        document.getElementById("messageInfo").style.color = "#e1ad01";
-        document.getElementById("messageInfo").innerHTML = "You have won!";
-        document.getElementById("messageInfo").style.visibility = "visible";
+        document.getElementById("radio-btn-container").style.visibility =
+          "visible";
+        document.getElementById("button-play").style.visibility = "visible";
+        document.getElementById("div-container-game-results").style.visibility =
+          "visible";
+        document.getElementById("p-game-result").style.color = "#e1ad01";
+        document.getElementById("p-game-result").innerHTML = "You have won!";
+        document.getElementById("p-game-result").style.visibility = "visible";
       }
     }
-    console.log(this.aliveEnemies);
   };
 
   randomMoveDelay = () => {
@@ -382,6 +379,12 @@ class Game extends CanvasGame {
   async generateTable() {
     let arrScores = await window.getScores();
     var table = document.getElementById("resultTable");
+
+    //deleting already existing table
+    for (var i = 1; i < table.rows.length; i++) {
+      table.deleteRow(i);
+    }
+
     arrScores.map((data) => {
       var row = table.insertRow(1);
       var cell1 = row.insertCell(0);
@@ -389,7 +392,7 @@ class Game extends CanvasGame {
       var cell3 = row.insertCell(2);
       cell1.innerHTML = data.result;
       cell2.innerHTML = data.difficulty;
-      cell3.innerHTML = data.time;
+      cell3.innerHTML = data.gameDate.toDate();
     });
   }
 
@@ -399,8 +402,9 @@ class Game extends CanvasGame {
     gameObjects[BOT_SECOND].setAbleToMove(false);
     gameObjects[BOT_THIRD].setAbleToMove(false);
 
-    document.getElementById("mySelect").style.visibility = "hidden";
-    document.getElementById("results").style.visibility = "hidden";
+    document.getElementById("radio-btn-container").style.visibility = "hidden";
+    document.getElementById("div-container-game-results").style.visibility =
+      "hidden";
     Difficulty_status = document.querySelector(
       'input[name="difficulty"]:checked'
     ).value;
@@ -432,8 +436,8 @@ class Game extends CanvasGame {
     gameObjects[PLAYER_NUMBER].resetLifes();
     gameObjects[BOT_SECOND].resetLifes();
     gameObjects[BOT_THIRD].resetLifes();
-    document.getElementById("btnReset").style.visibility = "hidden";
-    document.getElementById("messageInfo").style.visibility = "hidden";
+    document.getElementById("button-play").style.visibility = "hidden";
+    document.getElementById("p-game-result").style.visibility = "hidden";
 
     plane = [];
     backupPlane.map((x) => {

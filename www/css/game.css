@@ -1,9 +1,26 @@
 /* Author: Derek O Reilly, Dundalk Institute of Technology, Ireland. */
 /* style class for game's container, canvas and loading message      */
+@font-face {
+  font-family: "minecraftfont";
+  src: url("../fonts/minecraftfont.eot");
+  src: local("minecraftfont"), url("../fonts/minecraftfont.woff") format("woff"),
+    url("../fonts/minecraftfont.ttf") format("truetype");
+}
+/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_1412">Text with this font applied</p> */
+.fontsforweb_fontid_1412 {
+  font-family: "minecraftfont" !important;
+}
+
+/* Font downloaded from FontsForWeb.com */
+* {
+  font-size: 16px;
+  font-family: "minecraftfont";
+}
 
 body {
   background-color: #013220;
 }
+
 #gameContainer {
   /* style the gameContainer if the game includes non-canvas elements */
   display: flex;
@@ -65,24 +82,24 @@ footer {
   /* border-radius: 10px; */
 }
 
-#messageInfo {
+#p-game-result {
   position: absolute;
   left: 0;
   margin-left: auto;
   margin-right: auto;
-  top: 40vh;
+  top: 20vh;
   width: 100vw;
   height: 7vh;
   color: #9d311e;
   font-weight: bold;
-  font-size: 3rem;
+  font-size: 4rem;
   visibility: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
 }
-#mySelect {
+#radio-btn-container {
   z-index: 100;
   position: absolute;
   left: 0;
@@ -97,7 +114,7 @@ footer {
   background-color: #e1ad01;
   border-radius: 10px;
 }
-#btnReset {
+#button-play {
   z-index: 100;
   position: absolute;
   left: 0;
@@ -107,13 +124,22 @@ footer {
   top: 60vh;
   width: 20vw;
   height: 10vh;
-  color: whitesmoke;
-  font-size: 3rem;
-  background-color: #9d311e;
-  /* visibility: hidden; */
+  color: #3e363f;
+  font-size: 3.5rem;
+  font-weight: bold;
+  background-color: #e1ad01;
+  border-radius: 10px;
+  letter-spacing: 0.5rem;
 }
 
-#results {
+input[type="radio"]:hover {
+  cursor: pointer;
+}
+
+#button-play:hover {
+  cursor: pointer;
+}
+#div-container-game-results {
   z-index: 100;
   position: absolute;
   right: 0;
@@ -151,14 +177,10 @@ nav ul {
 
 @media all and (orientation: portrait) {
   #gameCanvas {
-    /* the canvas styling usually does not change */
-
     width: 100vw;
     height: 100vw;
-    /* border: 3px solid black; */
-    /* border-radius: 10px; */
   }
-  #messageInfo {
+  #p-game-result {
     z-index: 100;
     position: absolute;
     left: 0;
@@ -173,7 +195,7 @@ nav ul {
     font-size: 3rem;
     visibility: hidden;
   }
-  #results {
+  #div-container-game-results {
     z-index: 100;
     position: absolute;
     left: 0;
@@ -188,7 +210,7 @@ nav ul {
     background-color: #e1ad01;
     overflow-y: auto;
   }
-  #btnReset {
+  #button-play {
     z-index: 100;
     position: absolute;
     left: 0;
@@ -198,12 +220,10 @@ nav ul {
     top: 80vh;
     width: 100vw;
     height: 10vh;
-    color: whitesmoke;
     font-size: 3rem;
-    background-color: #9d311e;
   }
 
-  #mySelect {
+  #radio-btn-container {
     z-index: 100;
     position: absolute;
     left: 0;

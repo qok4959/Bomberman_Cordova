@@ -16,6 +16,7 @@
     <!-- Always include the game stylesheet, the Game class, the GameObject class and index.js -->
     <!-- These four must be included in all games. This code never changes.                -->
     <link href="css/game.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="font.css" />
 
     <script src="js/db.js" type="module"></script>
     <script src="js/index.js" type="text/javascript"></script>
@@ -62,7 +63,7 @@
         </table>
       </div>
 
-      <div id="mySelect">
+      <div id="radio-btn-container">
         <fieldset>
           <legend>select difficulty</legend>
 
@@ -83,8 +84,8 @@
         </fieldset>
       </div>
 
-      <p id="messageInfo">You have won!</p>
-      <input id="btnReset" type="button" value="Play" />
+      <p id="p-game-result">You have won!</p>
+      <input id="button-play" type="button" value="PLAY" />
       <footer>v1.0</footer>
     </div>
   </body>
