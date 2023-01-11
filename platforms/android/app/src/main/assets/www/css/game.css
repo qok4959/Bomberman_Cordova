@@ -95,6 +95,7 @@ footer {
   color: #3e363f;
   font-size: 1.5rem;
   background-color: #e1ad01;
+  border-radius: 10px;
 }
 #btnReset {
   z-index: 100;
@@ -112,7 +113,40 @@ footer {
   /* visibility: hidden; */
 }
 
-#listBox {
+#results {
+  z-index: 100;
+  position: absolute;
+  right: 0;
+  margin-right: 5vw;
+  top: 15vh;
+  width: 20vw;
+  height: 70vh;
+  color: #3e363f;
+  font-size: 1rem;
+  background-color: #e1ad01;
+  overflow-y: auto;
+  border-radius: 10px;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 100%;
+  border: 1px solid #ddd;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+nav ul {
+  height: 15vh;
+  width: 20vw;
+}
+nav ul {
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 @media all and (orientation: portrait) {
@@ -131,7 +165,7 @@ footer {
     right: 0;
     margin-left: auto;
     margin-right: auto;
-    top: 5vh;
+    top: 50vh;
     width: 100vw;
     height: 10vh;
     color: #9d311e;
@@ -139,7 +173,21 @@ footer {
     font-size: 3rem;
     visibility: hidden;
   }
-
+  #results {
+    z-index: 100;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    top: 10vh;
+    width: 80vw;
+    height: 15vh;
+    color: #3e363f;
+    font-size: 1rem;
+    background-color: #e1ad01;
+    overflow-y: auto;
+  }
   #btnReset {
     z-index: 100;
     position: absolute;

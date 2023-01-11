@@ -348,7 +348,7 @@ class Game extends CanvasGame {
         window.saveScore("lose", difficultyString);
         document.getElementById("mySelect").style.visibility = "visible";
         document.getElementById("btnReset").style.visibility = "visible";
-        document.getElementById("listBox").style.visibility = "visible";
+        document.getElementById("results").style.visibility = "visible";
         document.getElementById("messageInfo").innerHTML = "You have lost!";
         document.getElementById("messageInfo").style.visibility = "visible";
         document.getElementById("messageInfo").style.color = "#9d311e";
@@ -360,7 +360,7 @@ class Game extends CanvasGame {
         isGameOver = true;
         document.getElementById("mySelect").style.visibility = "visible";
         document.getElementById("btnReset").style.visibility = "visible";
-        document.getElementById("listBox").style.visibility = "visible";
+        document.getElementById("results").style.visibility = "visible";
         document.getElementById("messageInfo").style.color = "#e1ad01";
         document.getElementById("messageInfo").innerHTML = "You have won!";
         document.getElementById("messageInfo").style.visibility = "visible";
@@ -400,7 +400,7 @@ class Game extends CanvasGame {
     gameObjects[BOT_THIRD].setAbleToMove(false);
 
     document.getElementById("mySelect").style.visibility = "hidden";
-    document.getElementById("listBox").style.visibility = "hidden";
+    document.getElementById("results").style.visibility = "hidden";
     Difficulty_status = document.querySelector(
       'input[name="difficulty"]:checked'
     ).value;
