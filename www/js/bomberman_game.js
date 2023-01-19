@@ -1,11 +1,3 @@
-/* Author: Derek O Reilly, Dundalk Institute of Technology, Ireland.             */
-/* There should always be a javaScript file with the same name as the html file. */
-/* This file always holds the playGame function().                               */
-/* It also holds player specific code, which will be different for each player       */
-
-/******************** Declare player specific global data and functions *****************/
-/* images must be declared as global, so that they will load before the player starts  */
-
 const CharacterImage = new Image();
 CharacterImage.src = "images/characters_sheet.png";
 
@@ -24,17 +16,12 @@ explosionImage.src = "images/explosions_sheet.png";
 
 let offCtx = null;
 
-/* Direction that the Character is walking */
-/* Note that this matches the row in the gameObject image for the given direction */
 const UP = 3;
 const LEFT = 1;
 const DOWN = 0;
 const RIGHT = 2;
 const STOPPED = 4;
 
-/* The various gameObjects */
-
-/* These are the positions that each gameObject is held in the gameObjects[] array */
 const BACKGROUND = 0;
 const PLAYER_NUMBER = 1;
 const INFO_BOMBS = 2;
@@ -70,12 +57,7 @@ let moved = false;
 let accelerometer = new Accelerometer({ frequency: 60 });
 
 let isFirebaseSet = false;
-/******************* END OF Declare player specific data and functions *****************/
 
-// let conn = new DB();
-// conn.saveTheScore("winner", 50);
-/* Always have a playGame() function                                     */
-/* However, the content of this function will be different for each player */
 function playGame() {
   if (squareSizeX == undefined) {
     squareSizeX = canvas.width / CHARACTER_SCALE;
@@ -130,14 +112,10 @@ function playGame() {
   navigator.appVersion.indexOf("Android") != -1 &&
     setInterval(movingDevice, 10);
 
-  // console.log(navigator.vibrate);
-
-  /* Always create a player that uses the gameObject array */
   let game = new Game();
 
   game.start();
 
-  /* If they are needed, then include any player-specific mouse and keyboard listners */
   let movedAccelerometer = false;
 
   function movingDevice() {

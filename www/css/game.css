@@ -1,12 +1,10 @@
-/* Author: Derek O Reilly, Dundalk Institute of Technology, Ireland. */
-/* style class for game's container, canvas and loading message      */
 @font-face {
   font-family: "minecraftfont";
   src: url("../fonts/minecraftfont.eot");
   src: local("minecraftfont"), url("../fonts/minecraftfont.woff") format("woff"),
     url("../fonts/minecraftfont.ttf") format("truetype");
 }
-/* use this class to attach this font to any element i.e. <p class="fontsforweb_fontid_1412">Text with this font applied</p> */
+
 .fontsforweb_fontid_1412 {
   font-family: "minecraftfont" !important;
 }
@@ -22,7 +20,6 @@ body {
 }
 
 #gameContainer {
-  /* style the gameContainer if the game includes non-canvas elements */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -71,15 +68,12 @@ footer {
 }
 
 #gameCanvas {
-  /* the canvas styling usually does not change */
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
   width: 40vw;
   height: 40vw;
-  /* border: 3px solid black; */
-  /* border-radius: 10px; */
 }
 
 #p-game-result {
